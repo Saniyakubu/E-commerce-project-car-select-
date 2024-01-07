@@ -59,7 +59,7 @@ const HomePage = () => {
             newCarsList.map((item: any) => (
               <Card key={item.id} className="w-1/4 h-96">
                 <CardHeader>
-                  <CardContent className=" border w-full">
+                  <CardContent className="border w-full p-0">
                     <img className="w-full" src={item.image} alt="" />
                   </CardContent>
                 </CardHeader>

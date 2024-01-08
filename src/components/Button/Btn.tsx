@@ -25,10 +25,11 @@ const Btn = () => {
   // setNewBtn(categoryList);
 
   return (
-    <div>
+    <>
       {Btn.map((L: any, index) => {
         return (
           <Button
+            className="text-base"
             style={{ margin: '5px' }}
             key={index}
             onClick={(event) => filterdBtn(event.currentTarget.value)}
@@ -38,7 +39,7 @@ const Btn = () => {
           </Button>
         );
       })}
-    </div>
+    </>
   );
 };
 

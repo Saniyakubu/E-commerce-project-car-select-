@@ -56,6 +56,12 @@ module.exports = {
         Dark: '#191919',
         SecondaryCl: '#9AE582',
         Accent: '#6BE087',
+
+        TBColor: 'background: rgba(255, 255, 255, 0.22)',
+        TShadow: 'box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1)',
+        bFilter: 'backdrop-filter: blur(8.6px)',
+        TWFilter: '-webkit-backdrop-filter: blur(8.6px)',
+        TBBorder: 'border: 1px solid rgba(255, 255, 255, 0.26)',
       },
       borderRadius: {
         lg: 'var(--radius)',

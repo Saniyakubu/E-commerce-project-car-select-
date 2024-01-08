@@ -11,13 +11,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FaCartPlus } from 'react-icons/fa';
-import { CgMenuRight } from 'react-icons/cg';
 import { ContextProvider } from '@/Store';
 import { useContext } from 'react';
-import RadioButton from '../radioBtn/radio';
 
 const FormSchema = z.object({
   searchInput: z.string().min(1, {
@@ -48,21 +45,23 @@ const Navbar = () => {
     //   ),
     // });
   }
-
+  // align-self: flex-end;
   return (
-    <header className="bg-Dark fixed flex items-center p-5 w-screen z-50">
-      <nav className="flex flex-col md:flex-row justify-between items-center w-full">
+    <header className="bg-Dark fixed flex items-center p-2 md:p-5 w-screen z-50">
+      <nav className="flex flex-col md:flex-row border justify-around items-center w-full">
         <div className="w-full md:w-fit flex items-center justify-between m-5 md:block">
-          <h1 className="text-white font-bold">Lorem ipsum </h1>
+          <h1 className="text-white font-bold justify-self-start">
+            Car Select
+          </h1>
           <div className=" md:hidden">
-            <CgMenuRight className=" text-white text-3xl" />
+            {/* <CgMenuRight className=" text-white text-3xl" /> */}
           </div>
         </div>
-        <div className="flex w-full p-5 justify-between items-center md:w-4/6">
+        <div className="flex w-full border md:w-2/4 p-3 justify-between items-center">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex items-center relative"
+              className="flex items-center relative w-80 mx-auto"
             >
               <FormField
                 control={form.control}
@@ -72,7 +71,7 @@ const Navbar = () => {
                     {/* <FormLabel>Search Input</FormLabel> */}
                     <FormControl>
                       <Input
-                        className="w-80 text-lg lg:w-96 md:w-72 md:bg-blue-300 p-6 relative"
+                        className="w-80 mx-auto  text-lg lg:w-96 md:w-72 md:bg-blue-300 p-6 relative"
                         placeholder="Search Car"
                         {...field}
                       />
@@ -89,12 +88,11 @@ const Navbar = () => {
               </Button>
             </form>
           </Form>
-          <div className="hidden justify-between items-center lg:w-72  md:flex p-5 ">
+          <div className="hidden md:block p-5 ">
             <Avatar className=" cursor-pointer">
               <AvatarImage src="" alt="Profile" />
               <AvatarFallback>P</AvatarFallback>
             </Avatar>
-            <FaCartPlus className="text-3xl text-white cursor-pointer hover:text-4xl transition-all" />
           </div>
         </div>
       </nav>

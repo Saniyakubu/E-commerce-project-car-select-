@@ -58,7 +58,7 @@ const Navbar = () => {
             <CgMenuRight className=" text-white text-3xl" />
           </div>
         </div>
-        <div className="flex w-full justify-between items-center border md:w-4/6">
+        <div className="flex w-full p-5 justify-between items-center md:w-4/6">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -72,7 +72,7 @@ const Navbar = () => {
                     {/* <FormLabel>Search Input</FormLabel> */}
                     <FormControl>
                       <Input
-                        className="w-80  lg:w-96 md:w-72 md:bg-blue-300 p-6 relative"
+                        className="w-80 text-lg lg:w-96 md:w-72 md:bg-blue-300 p-6 relative"
                         placeholder="Search Car"
                         {...field}
                       />
@@ -82,19 +82,19 @@ const Navbar = () => {
                 )}
               />
               <Button
-                className=" absolute top-1 p-5 mr-1 right-0 bottom-0"
+                className="absolute top-1 p-5 mr-1 right-0 bottom-0"
                 type="submit"
               >
                 Submit
               </Button>
             </form>
           </Form>
-          <div className="hidden justify-between items-center border lg:w-72  md:flex p-5 ">
+          <div className="hidden justify-between items-center lg:w-72  md:flex p-5 ">
             <Avatar className=" cursor-pointer">
               <AvatarImage src="" alt="Profile" />
               <AvatarFallback>P</AvatarFallback>
             </Avatar>
-            <FaCartPlus className=" text-4xl" />
+            <FaCartPlus className="text-3xl text-white cursor-pointer hover:text-4xl transition-all" />
           </div>
         </div>
       </nav>

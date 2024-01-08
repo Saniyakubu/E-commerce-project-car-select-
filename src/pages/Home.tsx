@@ -11,68 +11,59 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import ColorRadioBtn from '@/components/radioBtn/colorRadioBtn';
+import '../App.css';
 const HomePage = () => {
-  const { newCarsList } = useContext(ContextProvider);
+  const { newCarsList, addItemToCart } = useContext(ContextProvider);
 
   return (
     <section className="flex relative h-full">
-      <aside className="fixed left-0 top-32 bottom-0 p-5 w-60 border-r-2 flex flex-col overflow-y-auto">
-        <section className="flex flex-col gap-5 p-5">
+      <aside className="fixed p-10 left-0 top-32 bottom-0 w-60 border-r-2 flex flex-col items-center overflow-y-auto">
+        <section className="flex w-full flex-col gap-5 mb-5">
           <div>
-            <h1>{'title'}</h1>
+            <h1 className="text-xl font-bold">{'Colors'}</h1>
           </div>
-          <RadioButton id={'12'} name="color" value={'Silver'} />
-          <RadioButton id={'12'} name="color" value={'black'} />
-          <RadioButton id={'12'} name="color" value={'red'} />
-          <RadioButton id={'12'} name="color" value={'purple'} />
-          <RadioButton id={'12'} name="color" value={'blue'} />
+          <ColorRadioBtn />
         </section>
 
-        <section className="flex flex-col gap-5 p-5 ml-10">
+        <section className="flex w-full flex-col gap-5">
           <div>
-            <h1>{'title'}</h1>
+            <h1 className=" text-xl font-bold">{'Company'}</h1>
           </div>
-          <RadioButton id={'12'} name={'Category'} value={'Ford'} />
-          <RadioButton id={'12'} name={'Category'} value={'Honda'} />
-          <RadioButton id={'12'} name={'Category'} value={'Toyota'} />
-          <RadioButton id={'12'} name={'Category'} value={'All'} />
-          <RadioButton id={'12'} name={'Category'} value={'Category'} />
-        </section>
-        <section className="flex flex-col gap-5 p-5">
-          <div>
-            <h1>{'title'}</h1>
-          </div>
-          <RadioButton id={'12'} name={'price'} value={'200'} />
-          <RadioButton id={'12'} name={'price'} value={'43000'} />
-          <RadioButton id={'12'} name={'price'} value={'2500'} />
-          <RadioButton id={'12'} name={'price'} value={'1000'} />
-          <RadioButton id={'12'} name={'price'} value={'1500'} />
+          <RadioButton />
         </section>
       </aside>
-
       <div className="w-5/6 border mt-40  ml-80 border-red-500 h-full">
         <div className="flex p-5 items-center justify-center w-2/3 mx-auto border">
           <Btn />
         </div>
-        <div className=" w-full flex flex-wrap h-full p-10 gap-5 justify-between items-center">
+
+        <div className="w-full grid grid-cols-1 xl:grid-cols-2  2xl:grid-cols-3 h-full p-10 gap-5">
           {newCarsList &&
             newCarsList.map((item: any) => (
-              <Card key={item.id} className="w-1/4 h-96">
+              <Card key={item.id} className="flex flex-col justify-between">
                 <CardHeader>
                   <CardContent className="border w-full p-0">
                     <img className="w-full" src={item.image} alt="" />
                   </CardContent>
                 </CardHeader>
-                <CardTitle>Modal: {item.model}</CardTitle>
-                <CardDescription>
+                <CardTitle className=" px-5 border m-0">
+                  Modal: {item.model}
+                </CardTitle>
+                <CardDescription className="px-5 my-2">
                   Company: {item.company}
                   <br />
-                  Price: {item.price}
+                  Price: ${item.price}
                   <br />
                   Category: {item.category}
                 </CardDescription>
-                <CardFooter>
-                  <Button>Add to cart</Button>
+                <CardFooter className="py-3 px-5 w-full border">
+                  <Button
+                    onClick={() => addItemToCart(item.id)}
+                    className=" w-full"
+                  >
+                    Add to cart
+                  </Button>
                 </CardFooter>
               </Card>
             ))}

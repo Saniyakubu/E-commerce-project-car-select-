@@ -1,37 +1,36 @@
 import { ContextProvider } from '@/Store';
 import { useContext } from 'react';
 
-const RadioButton = () => {
+const ColorRadioBtn = () => {
   const { Cars, filterRadioput } = useContext(ContextProvider);
-
-  const company: any = [
+  const colors: any = [
     'All',
     ...new Set(
       Cars.map((items: any) => {
-        return items.company;
+        return items.color;
       })
     ),
   ];
 
-  console.log(company);
+  console.log(colors);
 
   return (
     <>
-      {company.map((company: string) => (
-        <label key={company} htmlFor={company} id={company}>
+      {colors.map((color: string) => (
+        <label key={color} htmlFor={color} id={color}>
           <input
             onChange={(e) => filterRadioput(e.currentTarget.value)}
             className="mr-2"
             type="radio"
-            name={'company'}
-            value={company}
-            id={'company'}
+            name={'colors'}
+            value={color}
+            id={color}
           />
-          {company}
+          {color}
         </label>
       ))}
     </>
   );
 };
 
-export default RadioButton;
+export default ColorRadioBtn;

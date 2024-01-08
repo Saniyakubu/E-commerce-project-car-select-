@@ -21,7 +21,8 @@ export const ContextProvider = createContext<any>('');
 
 const CarsContextProvider = ({ children }: childrenType) => {
   const [inputValue, setInputValue] = useState('');
-  //   const [carsList, setCarsList] = useState(Cars);
+  const [cartItems, setCartItems] = useState<any>({});
+  console.log(cartItems);
   const [newCarsList, setNewCarsList] = useState<[] | {}>(Cars);
   //   const [btnValue, setBtnValue] = useState(Cars);
 
@@ -74,6 +75,14 @@ const CarsContextProvider = ({ children }: childrenType) => {
     }
   };
 
+  const addItemToCart = (itemId: string) => {
+    if (!cartItems[itemId]) {
+      setCartItems((prev: any) => ({ ...prev, [itemId]: 1 }));
+    } else {
+      setCartItems((prev: any) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+    }
+  };
+
   return (
     <ContextProvider.Provider
       value={{
@@ -83,6 +92,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
         setInputValue,
         filterdBtn,
         filterRadioput,
+        addItemToCart,
       }}
     >
       {children}

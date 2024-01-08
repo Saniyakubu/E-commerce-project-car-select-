@@ -1,5 +1,3 @@
-import { ContextProvider } from './Store';
-import { useContext } from 'react';
 import Navbar from './components/nav/Navbar';
 import './App.css';
 

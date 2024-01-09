@@ -13,14 +13,19 @@ const ColorRadioBtn = () => {
   ];
 
   console.log(colors);
-
+  // before:contents-[''] before:bg-black before:w-5 before:h-5 before:absolute relative before:top-0
   return (
     <>
       {colors.map((color: string) => (
-        <label key={color} htmlFor={color} id={color}>
+        <label
+          key={color}
+          htmlFor={color}
+          id={color}
+          className=" p-1 font-bold capitalize flex"
+        >
           <input
             onChange={(e) => filterRadioput(e.currentTarget.value)}
-            className="mr-2"
+            className="mr-2 w-5 h-5 cursor-pointer"
             type="radio"
             name={'colors'}
             value={color}

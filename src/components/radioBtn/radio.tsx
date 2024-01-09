@@ -18,10 +18,15 @@ const RadioButton = () => {
   return (
     <>
       {company.map((company: string) => (
-        <label key={company} htmlFor={company} id={company}>
+        <label
+          key={company}
+          htmlFor={company}
+          id={company}
+          className=" p-1 font-bold capitalize flex"
+        >
           <input
             onChange={(e) => filterRadioput(e.currentTarget.value)}
-            className="mr-2"
+            className="mr-2 w-5 h-5 cursor-pointer"
             type="radio"
             name={'company'}
             value={company}

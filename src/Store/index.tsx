@@ -40,7 +40,6 @@ const CarsContextProvider = ({ children }: childrenType) => {
 
   const filterdBtn = (val: string) => {
     filteredProduct = Cars;
-
     if (val === 'All') {
       setNewCarsList(Cars);
     } else {
@@ -75,7 +74,14 @@ const CarsContextProvider = ({ children }: childrenType) => {
     }
   };
 
-  const addItemToCart = (itemId: string) => {
+  const addItemToCart = (itemId: number) => {
+    //  const CartItems = () => {
+    //    let cart = {};
+    //    for (let i = 1; i < data.length + 1; i++) {
+    //      cart[i] = 0;
+    //      setCartProducts(cart);
+    //    }
+    //  };
     if (!cartItems[itemId]) {
       setCartItems((prev: any) => ({ ...prev, [itemId]: 1 }));
     } else {
@@ -93,6 +99,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
         filterdBtn,
         filterRadioput,
         addItemToCart,
+        cartItems,
       }}
     >
       {children}

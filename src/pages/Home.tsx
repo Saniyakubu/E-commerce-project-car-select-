@@ -35,51 +35,10 @@ import {
 } from '@/components/ui/sheet';
 import { CgMenuRight } from 'react-icons/cg';
 import { FaCartPlus } from 'react-icons/fa';
+
 const HomePage = () => {
-  const { newCarsList, addItemToCart } = useContext(ContextProvider);
-
-  const data = [
-    {
-      goal: 400,
-    },
-    {
-      goal: 300,
-    },
-    {
-      goal: 200,
-    },
-    {
-      goal: 300,
-    },
-    {
-      goal: 200,
-    },
-    {
-      goal: 278,
-    },
-    {
-      goal: 189,
-    },
-    {
-      goal: 239,
-    },
-    {
-      goal: 300,
-    },
-    {
-      goal: 200,
-    },
-    {
-      goal: 278,
-    },
-    {
-      goal: 189,
-    },
-    {
-      goal: 349,
-    },
-  ];
-
+  const { newCarsList, addItemToCart, cartItems, Cars } =
+    useContext(ContextProvider);
   const [goal, setGoal] = useState<number>(Math.max(200, Math.min(400, 300)));
 
   function onClick(adjustment: number) {
@@ -89,7 +48,7 @@ const HomePage = () => {
   // grid grid-rows-4 h-fit w-full md:w-2/3 lg:bg-slate-400 lg:w-3/4 xl:w-4/5 place-items-center place-content-center  lg:h-20 xl:h-20   md:h-28 md:right-0 fixed top-48 md:top-40 z-50 right-0   md:bg-black mx-auto border
   return (
     <>
-      <div className="border fixed top-40 grid grid-cols-3 w-full z-20 glass md:grid-cols-5 md:top-36  md:w-2/3 lg:w-3/4 xl:w-10/12 p-2 md:right-0">
+      <div className="fixed top-40 grid grid-cols-3 w-full z-20 glass md:grid-cols-5 md:top-36  md:w-2/3 lg:w-3/4 xl:w-10/12 p-2 md:right-0">
         <Btn />
       </div>
 
@@ -112,7 +71,7 @@ const HomePage = () => {
         <Drawer>
           <DrawerTrigger
             asChild
-            className=" right-0 top-9    fixed r h-fit bottom-0 block text-end md:hidden  z-50"
+            className=" right-0 top-9 fixed h-fit bottom-0 block text-end md:hidden  z-50"
           >
             <Button className=" bg-Dark hover:text-black ">
               <CgMenuRight className="text-3xl text-white hover:text-black cursor-pointer hover:text-4xl transition-all" />
@@ -170,7 +129,7 @@ const HomePage = () => {
           </DrawerContent>
         </Drawer>
 
-        <div className="w-full border mt-96 md:w-3/4 md:mt-72 md:ml-64 border-red-500 xl:w-full h-full">
+        <div className="w-full mt-96 md:w-3/4 md:mt-72 md:ml-64 xl:w-full h-full">
           <div className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 h-full p-5 gap-5">
             {newCarsList &&
               newCarsList.map((item: any) => (
@@ -179,11 +138,11 @@ const HomePage = () => {
                   className="flex w-full flex-col justify-between"
                 >
                   <CardHeader>
-                    <CardContent className="border w-full p-0">
+                    <CardContent className="w-full p-0">
                       <img className="w-full" src={item.image} alt="" />
                     </CardContent>
                   </CardHeader>
-                  <CardTitle className=" px-5 border m-0">
+                  <CardTitle className=" px-5 m-0">
                     Modal: {item.model}
                   </CardTitle>
                   <CardDescription className="px-5 my-2">
@@ -193,7 +152,7 @@ const HomePage = () => {
                     <br />
                     Category: {item.category}
                   </CardDescription>
-                  <CardFooter className="py-3 px-5 w-full border">
+                  <CardFooter className="py-3 px-5 w-full">
                     <Button
                       onClick={() => addItemToCart(item.id)}
                       className=" w-full"
@@ -209,12 +168,50 @@ const HomePage = () => {
           <SheetTrigger className="fixed right-10 p-2 top-12   z-50 hidden md:block">
             <FaCartPlus className="text-3xl text-white cursor-pointer hover:text-4xl transition-all" />
           </SheetTrigger>
-          <SheetContent className="hidden md:block">
+          <SheetContent className="hidden md:block overflow-y-scroll p-2">
             <SheetHeader>
               <SheetTitle>Are you absolutely sure?</SheetTitle>
-              <SheetDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+              <SheetDescription className=" flex flex-col gap-5">
+                {Cars &&
+                  Cars.map((item: any) => {
+                    const { id, model, image, company, price, category } = item;
+                    if (cartItems[id] > 0) {
+                      return (
+                        <div>
+                          <Card
+                            key={item.id}
+                            className="flex w-full justify-between border items-center"
+                          >
+                            <CardHeader className=" p-0">
+                              <CardContent className="w-full p-0">
+                                <img
+                                  className="w-full p-0"
+                                  src={image}
+                                  alt=""
+                                />
+                              </CardContent>
+                            </CardHeader>
+                            <CardTitle className="text-base px-5 m-0">
+                              <div>Products</div>
+                              <div>{model}</div>
+                            </CardTitle>
+                            <CardDescription className="px-5 my-2">
+                              Price: ${price}
+                            </CardDescription>
+                            <CardFooter>
+                              <input
+                                className="border w-10"
+                                type="number"
+                                name=""
+                                id=""
+                              />
+                            </CardFooter>
+                          </Card>
+                        </div>
+                      );
+                    }
+                  })}
+                <Button className=" w-full">Add to cart</Button>
               </SheetDescription>
             </SheetHeader>
           </SheetContent>

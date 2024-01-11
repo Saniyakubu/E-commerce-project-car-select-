@@ -195,11 +195,11 @@ const HomePage = () => {
               <FaCartPlus />
             </div>
           </SheetTrigger>
-          <SheetContent className="w-[60%] hidden md:block overflow-y-scroll p-2 ">
+          <SheetContent className="hidden md:block overflow-y-scroll p-2 ">
             <SheetHeader>
-              <SheetTitle>My Cart</SheetTitle>
-              <SheetDescription className=" flex flex-col gap-5">
-                your cart item will be shown here
+              <SheetTitle className=" text-xl font-bold">My Cart</SheetTitle>
+              <SheetDescription className=" flex flex-col gap-5 w-full text-center">
+                Product will be shown here
               </SheetDescription>
             </SheetHeader>
             <div className="w-full flex flex-col gap-5">

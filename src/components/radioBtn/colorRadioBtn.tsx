@@ -1,18 +1,17 @@
 import { ContextProvider } from '@/Store';
 import { useContext } from 'react';
-
+import { carType } from '@/Store';
 const ColorRadioBtn = () => {
-  const { Cars, filterRadioput } = useContext(ContextProvider);
-  const colors: any = [
+  const { Cars, filteredRadioInput } = useContext(ContextProvider);
+  const colors: string[] = [
     'All',
-    ...new Set(
-      Cars.map((items: any) => {
+    ...new Set<string>(
+      Cars.map((items: carType) => {
         return items.color;
       })
     ),
   ];
 
-  console.log(colors);
   // before:contents-[''] before:bg-black before:w-5 before:h-5 before:absolute relative before:top-0
   return (
     <>
@@ -24,7 +23,7 @@ const ColorRadioBtn = () => {
           className=" p-1 font-bold capitalize flex"
         >
           <input
-            onChange={(e) => filterRadioput(e.currentTarget.value)}
+            onChange={(e) => filteredRadioInput(e.currentTarget.value)}
             className="mr-2 w-5 h-5 cursor-pointer"
             type="radio"
             name={'colors'}

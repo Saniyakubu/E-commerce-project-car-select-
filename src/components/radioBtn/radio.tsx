@@ -1,19 +1,17 @@
-import { ContextProvider } from '@/Store';
+import { ContextProvider, carType } from '@/Store';
 import { useContext } from 'react';
 
 const RadioButton = () => {
-  const { Cars, filterRadioput } = useContext(ContextProvider);
+  const { Cars, filteredRadioInput } = useContext(ContextProvider);
 
-  const company: any = [
+  const company: string[] = [
     'All',
-    ...new Set(
-      Cars.map((items: any) => {
+    ...new Set<string>(
+      Cars.map((items: carType) => {
         return items.company;
       })
     ),
   ];
-
-  console.log(company);
 
   return (
     <>
@@ -25,12 +23,12 @@ const RadioButton = () => {
           className=" p-1 font-bold capitalize flex"
         >
           <input
-            onChange={(e) => filterRadioput(e.currentTarget.value)}
+            onChange={(e) => filteredRadioInput(e.currentTarget.value)}
             className="mr-2 w-5 h-5 cursor-pointer"
             type="radio"
             name={'company'}
             value={company}
-            id={'company'}
+            id={company}
           />
           {company}
         </label>

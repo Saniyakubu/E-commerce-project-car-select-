@@ -1,38 +1,32 @@
-import { ContextProvider } from '@/Store';
+import { ContextProvider, carType } from '@/Store';
 import { Button } from '../ui/button';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 
 // type Props = {
 //   title: string;
 // };
 
 const Btn = () => {
-  const { filterdBtn, newCarsList, Cars } = useContext(ContextProvider);
+  const { filteredBtn, Cars } = useContext(ContextProvider);
 
-  const [Btn, setBtn] = useState([]);
-
-  const addNewBtn: any = [
+  const addNewBtn: string[] = [
     'All',
-    ...new Set(
-      Cars.map((items: any) => {
+    ...new Set<string>(
+      Cars.map((items: carType) => {
         return items.category;
       })
     ),
   ];
-  useEffect(() => {
-    setBtn(addNewBtn);
-  }, [newCarsList, filterdBtn]);
-  // setNewBtn(categoryList);
 
   return (
     <>
-      {Btn.map((L: any, index) => {
+      {addNewBtn.map((L: any, index) => {
         return (
           <Button
             className="text-base"
             style={{ margin: '5px' }}
             key={index}
-            onClick={(event) => filterdBtn(event.currentTarget.value)}
+            onClick={(event) => filteredBtn(event.currentTarget.value)}
             value={L}
           >
             {L}

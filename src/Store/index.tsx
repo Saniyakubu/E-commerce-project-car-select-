@@ -7,7 +7,7 @@ type childrenType = {
   children: ReactNode;
 };
 
-type carType = {
+export type carType = {
   id: number;
   model: string;
   category: string;
@@ -17,15 +17,18 @@ type carType = {
   image: string;
 };
 
+// type cartItem = {
+//   [number]: number;
+// };
+
 export const ContextProvider = createContext<any>('');
 
 const CarsContextProvider = ({ children }: childrenType) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState<string>('');
   const [cartItems, setCartItems] = useState<any>({});
-  console.log(cartItems);
-  const [newCarsList, setNewCarsList] = useState<[] | {}>(Cars);
-  //   const [btnValue, setBtnValue] = useState(Cars);
+  const [newCarsList, setNewCarsList] = useState<carType[]>(Cars);
 
+  const value = Object.values(cartItems).some((val: any) => val > 0);
   let Products = Cars;
   let filteredProduct: carType[];
 
@@ -38,7 +41,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
     setNewCarsList(filteredProduct);
   }, [inputValue]);
 
-  const filterdBtn = (val: string) => {
+  const filteredBtn = (val: string) => {
     filteredProduct = Cars;
     if (val === 'All') {
       setNewCarsList(Cars);
@@ -50,7 +53,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
     }
   };
 
-  const filterRadioput = (val: string) => {
+  const filteredRadioInput = (val: string) => {
     filteredProduct = Cars;
 
     if (val === 'All') {
@@ -74,18 +77,25 @@ const CarsContextProvider = ({ children }: childrenType) => {
     }
   };
 
-  const addItemToCart = (itemId: number) => {
-    //  const CartItems = () => {
-    //    let cart = {};
-    //    for (let i = 1; i < data.length + 1; i++) {
-    //      cart[i] = 0;
-    //      setCartProducts(cart);
-    //    }
-    //  };
+  const addItemToCart = (itemId: number): void => {
     if (!cartItems[itemId]) {
       setCartItems((prev: any) => ({ ...prev, [itemId]: 1 }));
     } else {
       setCartItems((prev: any) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+    }
+  };
+
+  const decrementItemFromCart = (itemId: number): void => {
+    if (!cartItems[itemId]) {
+      setCartItems((prev: any) => ({ ...prev, [itemId]: 0 }));
+    } else {
+      setCartItems((prev: any) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
+    }
+  };
+
+  const removeItemFromCart = (itemId: number): void => {
+    if (cartItems[itemId]) {
+      setCartItems((prev: any) => ({ ...prev, [itemId]: 0 }));
     }
   };
 
@@ -96,10 +106,13 @@ const CarsContextProvider = ({ children }: childrenType) => {
         newCarsList,
         inputValue,
         setInputValue,
-        filterdBtn,
-        filterRadioput,
+        filteredBtn,
+        filteredRadioInput,
         addItemToCart,
+        decrementItemFromCart,
+        removeItemFromCart,
         cartItems,
+        value,
       }}
     >
       {children}

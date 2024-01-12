@@ -6,7 +6,7 @@ const ColorRadioBtn = () => {
   const colors: string[] = [
     'All',
     ...new Set<string>(
-      Cars.map((items: carType) => {
+      Cars?.map((items: carType) => {
         return items.color;
       })
     ),
@@ -15,7 +15,7 @@ const ColorRadioBtn = () => {
   // before:contents-[''] before:bg-black before:w-5 before:h-5 before:absolute relative before:top-0
   return (
     <>
-      {colors.map((color: string) => (
+      {colors?.map((color: string) => (
         <label
           key={color}
           htmlFor={color}

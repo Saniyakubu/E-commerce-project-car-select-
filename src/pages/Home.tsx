@@ -105,10 +105,10 @@ const HomePage = () => {
                             <div>Products</div>
                             <div className=" break-keep">{model}</div>
                           </CardTitle>
-                          <CardDescription className="">
+                          <div className="">
                             <div>Price</div>
                             <div>${price}</div>
-                          </CardDescription>
+                          </div>
                           <CardFooter className="flex flex-col justify-center pt-5">
                             <div>Quantity</div>
                             <div>x{cartItems[id]}</div>
@@ -119,7 +119,7 @@ const HomePage = () => {
                   }
                 })}
               <DrawerFooter>
-                {value > 0 ? (
+                {value ? (
                   <div>
                     <Button className=" w-full">Check Out</Button>
                   </div>
@@ -165,7 +165,10 @@ const HomePage = () => {
                         <Button onClick={() => removeItemFromCart(item.id)}>
                           Remove
                         </Button>
-                        <button onClick={() => decrementItemFromCart(item.id)}>
+                        <button
+                          className="cursor-pointer hover:text-xl p-1"
+                          onClick={() => decrementItemFromCart(item.id)}
+                        >
                           <FaMinus />
                         </button>
                         {cartItems[item.id]}

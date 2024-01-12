@@ -7,6 +7,10 @@ type childrenType = {
   children: ReactNode;
 };
 
+type CartItems = {
+  [key: string]: number;
+};
+
 export type carType = {
   id: number;
   model: string;
@@ -17,18 +21,48 @@ export type carType = {
   image: string;
 };
 
-// type cartItem = {
-//   [number]: number;
-// };
+interface contextShopType {
+  Cars: carType[];
+  newCarsList: carType[];
+  cartItems: CartItems;
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
+  inputValue: string;
+  value: boolean;
+  filteredBtn: (val: string) => void;
+  filteredRadioInput: (val: string) => void;
+  addItemToCart: (itemId: number) => void;
+  decrementItemFromCart: (itemId: number) => void;
+  removeItemFromCart: (itemId: number) => void;
+}
 
-export const ContextProvider = createContext<any>('');
+const contextShopTypeDefault: contextShopType = {
+  Cars: [],
+  newCarsList: [],
+  cartItems: {},
+  inputValue: '',
+  value: false,
+  setInputValue: () => '',
+  filteredBtn: () => null,
+  filteredRadioInput: () => null,
+  addItemToCart: () => null,
+  decrementItemFromCart: () => null,
+  removeItemFromCart: () => null,
+};
+
+export const ContextProvider = createContext<contextShopType>(
+  contextShopTypeDefault
+);
 
 const CarsContextProvider = ({ children }: childrenType) => {
   const [inputValue, setInputValue] = useState<string>('');
-  const [cartItems, setCartItems] = useState<any>({});
+  const [cartItems, setCartItems] = useState<CartItems>({});
+
   const [newCarsList, setNewCarsList] = useState<carType[]>(Cars);
 
-  const value = Object.values(cartItems).some((val: any) => val > 0);
+  const value: boolean = Object.values(cartItems).some(
+    (val: number) => val > 0
+  );
+
   let Products = Cars;
   let filteredProduct: carType[];
 
@@ -79,42 +113,65 @@ const CarsContextProvider = ({ children }: childrenType) => {
 
   const addItemToCart = (itemId: number): void => {
     if (!cartItems[itemId]) {
-      setCartItems((prev: any) => ({ ...prev, [itemId]: 1 }));
+      setCartItems((prev: CartItems) => ({ ...prev, [itemId]: 1 }));
     } else {
-      setCartItems((prev: any) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+      setCartItems((prev: CartItems) => ({
+        ...prev,
+        [itemId]: prev[itemId] + 1,
+      }));
     }
   };
 
   const decrementItemFromCart = (itemId: number): void => {
     if (!cartItems[itemId]) {
-      setCartItems((prev: any) => ({ ...prev, [itemId]: 0 }));
+      setCartItems((prev: CartItems) => ({ ...prev, [itemId]: 0 }));
     } else {
-      setCartItems((prev: any) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
+      setCartItems((prev: CartItems) => ({
+        ...prev,
+        [itemId]: prev[itemId] - 1,
+      }));
     }
   };
 
   const removeItemFromCart = (itemId: number): void => {
     if (cartItems[itemId]) {
-      setCartItems((prev: any) => ({ ...prev, [itemId]: 0 }));
+      setCartItems((prev: CartItems) => ({ ...prev, [itemId]: 0 }));
     }
   };
 
+  // const getTotalAmount = () => {
+  //   let totalAmount = 0;
+  //   for (const item in cartItems) {
+  //     console.log(item);
+  //     if (cartItems[item] > 0) {
+  //       let itemInfo: any = newCarsList.find(
+  //         (product: any) => product.id === +item
+  //       );
+  //       console.log(itemInfo);
+  //       totalAmount += cartItems[item] * itemInfo.price;
+  //     }
+  //     console.log(totalAmount);
+  //   }
+  // };
+
+  // getTotalAmount();
+
+  const contextShop: contextShopType = {
+    Cars,
+    newCarsList,
+    inputValue,
+    setInputValue,
+    filteredBtn,
+    filteredRadioInput,
+    addItemToCart,
+    decrementItemFromCart,
+    removeItemFromCart,
+    cartItems,
+    value,
+  };
+
   return (
-    <ContextProvider.Provider
-      value={{
-        Cars,
-        newCarsList,
-        inputValue,
-        setInputValue,
-        filteredBtn,
-        filteredRadioInput,
-        addItemToCart,
-        decrementItemFromCart,
-        removeItemFromCart,
-        cartItems,
-        value,
-      }}
-    >
+    <ContextProvider.Provider value={contextShop}>
       {children}
     </ContextProvider.Provider>
   );

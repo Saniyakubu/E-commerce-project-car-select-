@@ -7,7 +7,7 @@ const RadioButton = () => {
   const company: string[] = [
     'All',
     ...new Set<string>(
-      Cars.map((items: carType) => {
+      Cars?.map((items: carType) => {
         return items.company;
       })
     ),
@@ -15,7 +15,7 @@ const RadioButton = () => {
 
   return (
     <>
-      {company.map((company: string) => (
+      {company?.map((company: string) => (
         <label
           key={company}
           htmlFor={company}

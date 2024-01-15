@@ -1,12 +1,12 @@
-import { ContextProvider } from '@/Store';
-import Btn from '@/components/Button/Btn';
-import RadioButton from '@/components/radioBtn/radio';
-import { useContext } from 'react';
-import { Button } from '@/components/ui/button';
-import { CgMenuRight } from 'react-icons/cg';
-import { FaCartPlus } from 'react-icons/fa';
-import { FaPlus, FaMinus } from 'react-icons/fa';
-import ColorRadioBtn from '@/components/radioBtn/colorRadioBtn';
+import { ContextProvider } from "@/Store";
+import Btn from "@/components/Button/Btn";
+import RadioButton from "@/components/radioBtn/radio";
+import { useContext } from "react";
+import { Button } from "@/components/ui/button";
+import { CgMenuRight } from "react-icons/cg";
+import { FaCartPlus } from "react-icons/fa";
+import { FaPlus, FaMinus } from "react-icons/fa";
+import ColorRadioBtn from "@/components/radioBtn/colorRadioBtn";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   Drawer,
   DrawerClose,
@@ -24,8 +24,8 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer';
-import '../App.css';
+} from "@/components/ui/drawer";
+import "../App.css";
 import {
   Sheet,
   SheetContent,
@@ -33,9 +33,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
+} from "@/components/ui/sheet";
 
-import { carType } from '@/Store';
+import { carType } from "@/Store";
 const HomePage = () => {
   const {
     newCarsList,
@@ -45,7 +45,11 @@ const HomePage = () => {
     removeItemFromCart,
     decrementItemFromCart,
     value,
+    totalAmount,
   } = useContext(ContextProvider);
+
+  const totalPrice = totalAmount();
+
   return (
     <>
       <div className="fixed top-40 grid grid-cols-3 w-full z-20 glass md:grid-cols-5 md:top-36  md:w-2/3 lg:w-3/4 xl:w-10/12 p-2 md:right-0">
@@ -56,14 +60,14 @@ const HomePage = () => {
         <aside className="fixed hidden md:flex p-10 left-0 top-32 bottom-0 w-60 border-r-2 flex-col items-center overflow-y-auto">
           <section className="flex w-full flex-col gap-5 mb-5">
             <div>
-              <h1 className="text-xl font-bold">{'Colors'}</h1>
+              <h1 className="text-xl font-bold">{"Colors"}</h1>
             </div>
             <ColorRadioBtn />
           </section>
 
           <section className="flex w-full flex-col gap-5">
             <div>
-              <h1 className=" text-xl font-bold">{'Company'}</h1>
+              <h1 className=" text-xl font-bold">{"Company"}</h1>
             </div>
             <RadioButton />
           </section>
@@ -121,6 +125,11 @@ const HomePage = () => {
               <DrawerFooter>
                 {value ? (
                   <div>
+                    <div className="w-full p-5 text-end">
+                      <h1 className="text-xl font-bold">
+                        ${totalPrice?.toLocaleString()}
+                      </h1>
+                    </div>
                     <Button className=" w-full">Check Out</Button>
                   </div>
                 ) : (
@@ -161,10 +170,11 @@ const HomePage = () => {
                   </CardDescription>
                   <CardFooter className="py-3 px-5 w-full">
                     {cartItems[item.id] > 0 ? (
-                      <div className=" w-full flex justify-between items-center">
+                      <div className=" w-full flex justify-between items-center transition-all">
                         <Button onClick={() => removeItemFromCart(item.id)}>
                           Remove
                         </Button>
+
                         <button
                           className="cursor-pointer hover:text-xl p-1"
                           onClick={() => decrementItemFromCart(item.id)}
@@ -182,7 +192,7 @@ const HomePage = () => {
                     ) : (
                       <Button
                         onClick={() => addItemToCart(item.id)}
-                        className=" w-full"
+                        className="w-full transition-all"
                       >
                         Add to cart
                       </Button>
@@ -224,7 +234,7 @@ const HomePage = () => {
                           <CardTitle className="text-base flex flex-col justify-center">
                             <span className="text-sm">Products</span>
                             <span className=" break-keep">
-                              {model.split(' ')}
+                              {model.split(" ")[0]}
                             </span>
                           </CardTitle>
                           <CardDescription className="flex flex-col justify-center">
@@ -242,6 +252,11 @@ const HomePage = () => {
                 })}
               {value ? (
                 <div>
+                  <div className=" w-full p-5 text-end">
+                    <h1 className="text-xl font-bold">
+                      ${totalPrice?.toLocaleString()}
+                    </h1>
+                  </div>
                   <Button className=" w-full">Check Out</Button>
                 </div>
               ) : (

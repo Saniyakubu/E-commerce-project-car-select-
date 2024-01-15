@@ -1,7 +1,7 @@
-import { createContext, useEffect } from 'react';
-import { ReactNode } from 'react';
-import Cars from '@/Db/Products';
-import { useState } from 'react';
+import { createContext, useEffect } from "react";
+import { ReactNode } from "react";
+import Cars from "@/Db/Products";
+import { useState } from "react";
 
 type childrenType = {
   children: ReactNode;
@@ -33,20 +33,32 @@ interface contextShopType {
   addItemToCart: (itemId: number) => void;
   decrementItemFromCart: (itemId: number) => void;
   removeItemFromCart: (itemId: number) => void;
+  totalAmount: () => number | undefined;
 }
 
 const contextShopTypeDefault: contextShopType = {
   Cars: [],
   newCarsList: [],
   cartItems: {},
-  inputValue: '',
+  inputValue: "",
   value: false,
-  setInputValue: () => '',
+  setInputValue: () => "",
   filteredBtn: () => null,
   filteredRadioInput: () => null,
   addItemToCart: () => null,
   decrementItemFromCart: () => null,
   removeItemFromCart: () => null,
+  totalAmount: () => undefined,
+};
+
+type productPrice = {
+  id: number;
+  model: string;
+  category: string;
+  color: string;
+  price: number;
+  company: string;
+  image: string;
 };
 
 export const ContextProvider = createContext<contextShopType>(
@@ -54,7 +66,7 @@ export const ContextProvider = createContext<contextShopType>(
 );
 
 const CarsContextProvider = ({ children }: childrenType) => {
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>("");
   const [cartItems, setCartItems] = useState<CartItems>({});
 
   const [newCarsList, setNewCarsList] = useState<carType[]>(Cars);
@@ -77,7 +89,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
 
   const filteredBtn = (val: string) => {
     filteredProduct = Cars;
-    if (val === 'All') {
+    if (val === "All") {
       setNewCarsList(Cars);
     } else {
       filteredProduct = filteredProduct.filter(
@@ -90,7 +102,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
   const filteredRadioInput = (val: string) => {
     filteredProduct = Cars;
 
-    if (val === 'All') {
+    if (val === "All") {
       setNewCarsList(Cars);
       return;
     }
@@ -139,22 +151,21 @@ const CarsContextProvider = ({ children }: childrenType) => {
     }
   };
 
-  // const getTotalAmount = () => {
-  //   let totalAmount = 0;
-  //   for (const item in cartItems) {
-  //     console.log(item);
-  //     if (cartItems[item] > 0) {
-  //       let itemInfo: any = newCarsList.find(
-  //         (product: any) => product.id === +item
-  //       );
-  //       console.log(itemInfo);
-  //       totalAmount += cartItems[item] * itemInfo.price;
-  //     }
-  //     console.log(totalAmount);
-  //   }
-  // };
-
-  // getTotalAmount();
+  const totalAmount = (): number | undefined => {
+    let productsPrice = 0;
+    for (const keys in cartItems) {
+      if (cartItems[keys] > 0) {
+        const itemInfo: carType | undefined = newCarsList.find(
+          (product: productPrice) => product.id === +keys
+        );
+        console.log(itemInfo);
+        if (itemInfo) {
+          productsPrice += cartItems[keys] * itemInfo?.price;
+        }
+      }
+    }
+    return productsPrice;
+  };
 
   const contextShop: contextShopType = {
     Cars,
@@ -168,6 +179,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
     removeItemFromCart,
     cartItems,
     value,
+    totalAmount,
   };
 
   return (

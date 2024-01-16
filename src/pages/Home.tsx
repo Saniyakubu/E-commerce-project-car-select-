@@ -7,6 +7,7 @@ import { CgMenuRight } from "react-icons/cg";
 import { FaCartPlus } from "react-icons/fa";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import ColorRadioBtn from "@/components/radioBtn/colorRadioBtn";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
   CardContent,
@@ -38,27 +39,28 @@ import {
 import { carType } from "@/Store";
 const HomePage = () => {
   const {
+    filterCarsList,
     newCarsList,
     addItemToCart,
     cartItems,
-    Cars,
     removeItemFromCart,
     decrementItemFromCart,
     value,
     totalAmount,
+    Checkouts,
+    isLoading,
   } = useContext(ContextProvider);
 
   const totalPrice = totalAmount();
 
   return (
     <>
-      <div className="fixed top-40 grid grid-cols-3 w-full z-20 glass md:grid-cols-5 md:top-36  md:w-2/3 lg:w-3/4 xl:w-10/12 p-2 md:right-0">
+      <div className="glass fixed top-40 z-20 grid w-full grid-cols-3 p-2 md:right-0  md:top-36 md:w-2/3 md:grid-cols-5 lg:w-3/4 xl:w-10/12">
         <Btn />
       </div>
-
-      <section className="flex relative justify-between h-full">
-        <aside className="fixed hidden md:flex p-10 left-0 top-32 bottom-0 w-60 border-r-2 flex-col items-center overflow-y-auto">
-          <section className="flex w-full flex-col gap-5 mb-5">
+      <section className="relative flex h-full justify-between">
+        <aside className="fixed bottom-0 left-0 top-32 hidden w-60 flex-col items-center overflow-y-auto scroll-smooth border-r-2 p-10 focus:scroll-auto md:flex">
+          <section className="mb-5 flex w-full flex-col gap-5">
             <div>
               <h1 className="text-xl font-bold">{"Colors"}</h1>
             </div>
@@ -75,14 +77,14 @@ const HomePage = () => {
         <Drawer>
           <DrawerTrigger
             asChild
-            className=" right-0 top-9 fixed h-fit bottom-0 block text-end md:hidden  z-50"
+            className=" fixed bottom-0 right-0 top-9 z-50 block h-fit text-end  md:hidden"
           >
             <Button className=" bg-Dark hover:text-black ">
-              <CgMenuRight className="text-3xl text-white hover:text-black cursor-pointer hover:text-4xl transition-all" />
+              <CgMenuRight className="cursor-pointer text-3xl text-white transition-all hover:text-4xl hover:text-black" />
             </Button>
           </DrawerTrigger>
 
-          <DrawerContent className="block md:hidden">
+          <DrawerContent className="z-50 block md:hidden">
             <div className="mx-auto w-full max-w-lg">
               <DrawerHeader>
                 <DrawerTitle>My Cart</DrawerTitle>
@@ -90,19 +92,24 @@ const HomePage = () => {
                   Items you add in cart will be here
                 </DrawerDescription>
               </DrawerHeader>
-              {Cars &&
-                Cars.map((item: carType) => {
-                  const { id, model, image, price } = item;
-                  if (cartItems[id] > 0) {
+              {filterCarsList &&
+                filterCarsList.map((item: carType) => {
+                  const { _id, model, image, price } = item;
+                  if (cartItems[_id] > 0) {
                     return (
-                      <div key={item.id}>
+                      <div key={item._id}>
                         <Card
-                          key={item.id}
-                          className="flex items-center justify-between w-full border gap-3 mb-5"
+                          key={item._id}
+                          className="mb-5 flex w-full items-center justify-between gap-3 border"
                         >
                           <CardHeader className=" w-full flex-1 p-0">
                             <CardContent className="w-full p-0">
-                              <img className="w-full" src={image} alt="" />
+                              <img
+                                loading="lazy"
+                                className="w-full"
+                                src={image}
+                                alt=""
+                              />
                             </CardContent>
                           </CardHeader>
                           <CardTitle className="text-base">
@@ -115,7 +122,7 @@ const HomePage = () => {
                           </div>
                           <CardFooter className="flex flex-col justify-center pt-5">
                             <div>Quantity</div>
-                            <div>x{cartItems[id]}</div>
+                            <div>x{cartItems[_id]}</div>
                           </CardFooter>
                         </Card>
                       </div>
@@ -133,7 +140,7 @@ const HomePage = () => {
                     <Button className=" w-full">Check Out</Button>
                   </div>
                 ) : (
-                  <div className=" w-full mx-20 mt-10">
+                  <div className=" mx-20 mt-10 w-full">
                     <h1 className=" text-2xl font-bold">Your Cart Is Empty</h1>
                   </div>
                 )}
@@ -145,93 +152,116 @@ const HomePage = () => {
           </DrawerContent>
         </Drawer>
 
-        <div className="w-full mt-96 md:w-3/4 md:mt-72 md:ml-64 xl:w-full h-full">
-          <div className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 h-full p-5 gap-5">
-            {newCarsList &&
-              newCarsList.map((item: carType) => (
-                <Card
-                  key={item.id}
-                  className="flex w-full flex-col justify-between"
-                >
-                  <CardHeader>
-                    <CardContent className="w-full p-0">
-                      <img className="w-full" src={item.image} alt="" />
-                    </CardContent>
-                  </CardHeader>
-                  <CardTitle className=" px-5 m-0">
-                    Modal: {item.model}
-                  </CardTitle>
-                  <CardDescription className="px-5 my-2">
-                    Company: {item.company}
-                    <br />
-                    Price: ${item.price}
-                    <br />
-                    Category: {item.category}
-                  </CardDescription>
-                  <CardFooter className="py-3 px-5 w-full">
-                    {cartItems[item.id] > 0 ? (
-                      <div className=" w-full flex justify-between items-center transition-all">
-                        <Button onClick={() => removeItemFromCart(item.id)}>
-                          Remove
-                        </Button>
+        <div className="mt-96 h-full w-full md:ml-64 md:mt-72 md:w-3/4 xl:w-full">
+          {isLoading ? (
+            <div className="mb-10 flex flex-wrap justify-center gap-5">
+              <Skeleton className="h-[400px] w-[300px]" />
+              <Skeleton className="h-[400px] w-[300px]" />
+              <Skeleton className="h-[400px] w-[300px]" />
+              <Skeleton className="h-[400px] w-[300px]" />
+              <Skeleton className="h-[400px] w-[300px]" />
+              <Skeleton className="h-[400px] w-[300px]" />
+              <Skeleton className="h-[400px] w-[300px]" />
+              <Skeleton className="h-[400px] w-[300px]" />
+            </div>
+          ) : (
+            <div className="grid h-full w-full grid-cols-1 gap-5 p-5 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              {newCarsList &&
+                newCarsList.map((item: carType) => (
+                  <Card
+                    key={item._id}
+                    className="flex w-full flex-col justify-between"
+                  >
+                    <CardHeader>
+                      <CardContent className="w-full p-0">
+                        <img
+                          loading="lazy"
+                          className="w-full"
+                          src={item.image}
+                          alt=""
+                        />
+                      </CardContent>
+                    </CardHeader>
+                    <CardTitle className=" m-0 px-5">
+                      Modal: {item.model}
+                    </CardTitle>
+                    <CardDescription className="my-2 px-5">
+                      Company: {item.company}
+                      <br />
+                      Price: ${item.price}
+                      <br />
+                      Category: {item.category}
+                    </CardDescription>
+                    <CardFooter className="w-full px-5 py-3">
+                      {cartItems[item._id] > 0 ? (
+                        <div className="flex w-full items-center justify-between transition-all">
+                          <Button onClick={() => removeItemFromCart(item._id)}>
+                            Remove
+                          </Button>
 
-                        <button
-                          className="cursor-pointer hover:text-xl p-1"
-                          onClick={() => decrementItemFromCart(item.id)}
+                          <button
+                            className="cursor-pointer p-1 hover:text-xl"
+                            onClick={() => decrementItemFromCart(item._id)}
+                          >
+                            <FaMinus />
+                          </button>
+                          {cartItems[item._id]}
+                          <button
+                            className="cursor-pointer p-1 hover:text-xl"
+                            onClick={() => addItemToCart(item._id)}
+                          >
+                            <FaPlus />
+                          </button>
+                        </div>
+                      ) : (
+                        <Button
+                          onClick={() => addItemToCart(item._id)}
+                          className="w-full transition-all"
                         >
-                          <FaMinus />
-                        </button>
-                        {cartItems[item.id]}
-                        <button
-                          className="cursor-pointer hover:text-xl p-1"
-                          onClick={() => addItemToCart(item.id)}
-                        >
-                          <FaPlus />
-                        </button>
-                      </div>
-                    ) : (
-                      <Button
-                        onClick={() => addItemToCart(item.id)}
-                        className="w-full transition-all"
-                      >
-                        Add to cart
-                      </Button>
-                    )}
-                  </CardFooter>
-                </Card>
-              ))}
-          </div>
+                          Add to cart
+                        </Button>
+                      )}
+                    </CardFooter>
+                  </Card>
+                ))}
+            </div>
+          )}
         </div>
         <Sheet>
-          <SheetTrigger className="fixed right-10 p-2 top-12 z-50 hidden md:block">
-            <div className="text-3xl text-white cursor-pointer hover:text-4xl transition-all">
+          <SheetTrigger className="fixed right-10 top-12 z-50 hidden p-2 md:block">
+            <div className="cursor-pointer text-3xl text-white transition-all hover:text-4xl">
               <FaCartPlus />
             </div>
           </SheetTrigger>
-          <SheetContent className="hidden md:block overflow-y-scroll p-2 ">
+          <SheetContent className="hidden overflow-x-hidden overflow-y-scroll p-2 md:block ">
             <SheetHeader>
               <SheetTitle className=" text-xl font-bold">My Cart</SheetTitle>
-              <SheetDescription className=" flex flex-col gap-5 w-full text-center">
+              <SheetDescription className=" flex w-full flex-col gap-5 text-center">
                 Product will be shown here
               </SheetDescription>
             </SheetHeader>
-            <div className="w-full flex flex-col gap-5">
-              {Cars &&
-                Cars.map((item: carType) => {
-                  const { id, model, image, price } = item;
-                  if (cartItems[id] > 0) {
+            <div className="flex w-full flex-col gap-5">
+              {filterCarsList &&
+                filterCarsList.map((item: carType) => {
+                  const { _id, model, image, price } = item;
+                  if (cartItems[_id] > 0) {
                     return (
-                      <div key={item.id}>
+                      <div key={item._id}>
                         <Card
-                          key={item.id}
-                          className="grid p-4 grid-cols-4 place-items-center place-content-between w-full border gap-8"
+                          key={item._id}
+                          className="grid w-full grid-cols-4 place-content-between place-items-center gap-8 border p-4"
                         >
                           <CardHeader className=" p-0">
                             <CardContent className="p-0">
-                              <img className="w-full " src={image} alt="" />
+                              <img
+                                loading="lazy"
+                                className="w-full "
+                                src={image}
+                                alt=""
+                              />
                             </CardContent>
                           </CardHeader>
-                          <CardTitle className="text-base flex flex-col justify-center">
+                          <CardTitle className="flex flex-col justify-center text-base">
                             <span className="text-sm">Products</span>
                             <span className=" break-keep">
                               {model.split(" ")[0]}
@@ -239,11 +269,11 @@ const HomePage = () => {
                           </CardTitle>
                           <CardDescription className="flex flex-col justify-center">
                             <span>Price</span>
-                            <span>${price}</span>
+                            <span>${price.toLocaleString()}</span>
                           </CardDescription>
                           <CardFooter className="flex flex-col justify-center p-0">
                             <div>Quantity</div>
-                            <div>x{cartItems[id]}</div>
+                            <div>x{cartItems[_id]}</div>
                           </CardFooter>
                         </Card>
                       </div>
@@ -257,10 +287,22 @@ const HomePage = () => {
                       ${totalPrice?.toLocaleString()}
                     </h1>
                   </div>
-                  <Button className=" w-full">Check Out</Button>
+                  <Button
+                    disabled={isLoading ? isLoading : false}
+                    onClick={() =>
+                      Checkouts({
+                        cartItems: {
+                          ...cartItems,
+                        },
+                      })
+                    }
+                    className=" w-full"
+                  >
+                    Check Out
+                  </Button>
                 </div>
               ) : (
-                <div className=" w-full mx-20 mt-10">
+                <div className=" mx-20 mt-10 w-full">
                   <div className=" text-2xl font-bold">Your Cart Is Empty</div>
                 </div>
               )}

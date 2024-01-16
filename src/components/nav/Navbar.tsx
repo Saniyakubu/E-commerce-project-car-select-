@@ -1,23 +1,23 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ContextProvider } from '@/Store';
-import { useContext } from 'react';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ContextProvider } from "@/Store";
+import { useContext } from "react";
 
 const FormSchema = z.object({
   searchInput: z.string().min(1, {
-    message: 'Character must be at least 1 characters.',
+    message: "Character must be at least 1 characters.",
   }),
 });
 
@@ -25,7 +25,7 @@ const Navbar = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      searchInput: '',
+      searchInput: "",
     },
   });
 
@@ -46,21 +46,21 @@ const Navbar = () => {
   }
   // align-self: flex-end;
   return (
-    <header className="bg-Dark fixed flex items-center p-2 md:p-5 w-screen z-50">
-      <nav className="flex flex-col md:flex-row justify-around md:justify-normal  items-center w-full">
-        <div className="w-full md:w-fit flex items-center justify-between m-5 md:block">
-          <h1 className="text-white text-2xl font-bold justify-self-start">
+    <header className="fixed z-50 flex w-screen items-center bg-Dark p-2 md:p-5">
+      <nav className="flex w-full flex-col items-center justify-around  md:flex-row md:justify-normal">
+        <div className="m-5 flex w-full items-center justify-between md:block md:w-fit">
+          <h1 className="justify-self-start text-2xl font-bold text-white">
             Car Select
           </h1>
           <div className=" md:hidden">
             {/* <CgMenuRight className=" text-white text-3xl" /> */}
           </div>
         </div>
-        <div className="flex w-full md:w-2/3 mx-auto p-3 justify-between items-center">
+        <div className="mx-auto flex w-full items-center justify-between p-3 md:w-2/3">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex items-center relative w-80  mx-auto lg:w-96"
+              className="relative mx-auto flex w-80  items-center lg:w-96"
             >
               <FormField
                 control={form.control}
@@ -70,7 +70,7 @@ const Navbar = () => {
                     {/* <FormLabel>Search Input</FormLabel> */}
                     <FormControl>
                       <Input
-                        className="w-80 mx-auto  text-lg lg:w-96 p-6 relative"
+                        className="relative mx-auto  w-80 p-6 text-lg lg:w-96"
                         placeholder="Search Car"
                         {...field}
                       />
@@ -80,14 +80,14 @@ const Navbar = () => {
                 )}
               />
               <Button
-                className="absolute top-1 p-5 mr-1 right-0 bottom-0"
+                className="absolute bottom-0 right-0 top-1 mr-1 p-5"
                 type="submit"
               >
                 Submit
               </Button>
             </form>
           </Form>
-          <div className="hidden md:block p-5 ">
+          <div className="hidden p-5 md:block ">
             <Avatar className=" cursor-pointer">
               <AvatarImage src="" alt="Profile" />
               <AvatarFallback>P</AvatarFallback>

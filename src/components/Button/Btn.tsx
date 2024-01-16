@@ -1,16 +1,16 @@
-import { ContextProvider, carType } from '@/Store';
-import { Button } from '../ui/button';
-import { useContext } from 'react';
+import { ContextProvider, carType } from "@/Store";
+import { Button } from "../ui/button";
+import { useContext } from "react";
 
 const Btn = () => {
-  const { filteredBtn, Cars } = useContext(ContextProvider);
+  const { filteredBtn, filterCarsList } = useContext(ContextProvider);
 
   const addNewBtn: string[] = [
-    'All',
+    "All",
     ...new Set<string>(
-      Cars?.map((items: carType) => {
+      filterCarsList?.map((items: carType) => {
         return items.category;
-      })
+      }),
     ),
   ];
 
@@ -20,7 +20,7 @@ const Btn = () => {
         return (
           <Button
             className="text-base"
-            style={{ margin: '5px' }}
+            style={{ margin: "5px" }}
             key={index}
             onClick={(event) => filteredBtn(event.currentTarget.value)}
             value={L}

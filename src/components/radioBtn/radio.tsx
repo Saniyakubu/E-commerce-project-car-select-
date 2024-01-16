@@ -1,15 +1,15 @@
-import { ContextProvider, carType } from '@/Store';
-import { useContext } from 'react';
+import { ContextProvider, carType } from "@/Store";
+import { useContext } from "react";
 
 const RadioButton = () => {
-  const { Cars, filteredRadioInput } = useContext(ContextProvider);
+  const { filterCarsList, filteredRadioInput } = useContext(ContextProvider);
 
   const company: string[] = [
-    'All',
+    "All",
     ...new Set<string>(
-      Cars?.map((items: carType) => {
+      filterCarsList?.map((items: carType) => {
         return items.company;
-      })
+      }),
     ),
   ];
 
@@ -20,13 +20,13 @@ const RadioButton = () => {
           key={company}
           htmlFor={company}
           id={company}
-          className=" p-1 font-bold capitalize flex"
+          className="flex p-1 font-bold capitalize"
         >
           <input
             onChange={(e) => filteredRadioInput(e.currentTarget.value)}
-            className="mr-2 w-5 h-5 cursor-pointer"
+            className="mr-2 h-5 w-5 cursor-pointer"
             type="radio"
-            name={'company'}
+            name={"company"}
             value={company}
             id={company}
           />

@@ -1,8 +1,8 @@
 import { createContext, useEffect } from "react";
 import { ReactNode } from "react";
-import Cars from "@/Db/Products";
 import { useState } from "react";
-
+import axios from "axios";
+// import Cars from "@/Db/Products";
 type childrenType = {
   children: ReactNode;
 };
@@ -12,7 +12,7 @@ type CartItems = {
 };
 
 export type carType = {
-  id: number;
+  _id: number;
   model: string;
   category: string;
   color: string;
@@ -22,26 +22,29 @@ export type carType = {
 };
 
 interface contextShopType {
-  Cars: carType[];
+  filterCarsList: carType[];
   newCarsList: carType[];
   cartItems: CartItems;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   inputValue: string;
   value: boolean;
+  isLoading: boolean;
   filteredBtn: (val: string) => void;
   filteredRadioInput: (val: string) => void;
   addItemToCart: (itemId: number) => void;
   decrementItemFromCart: (itemId: number) => void;
   removeItemFromCart: (itemId: number) => void;
   totalAmount: () => number | undefined;
+  Checkouts: (data: any) => Promise<void> | undefined;
 }
 
 const contextShopTypeDefault: contextShopType = {
-  Cars: [],
+  filterCarsList: [],
   newCarsList: [],
   cartItems: {},
   inputValue: "",
   value: false,
+  isLoading: false,
   setInputValue: () => "",
   filteredBtn: () => null,
   filteredRadioInput: () => null,
@@ -49,10 +52,18 @@ const contextShopTypeDefault: contextShopType = {
   decrementItemFromCart: () => null,
   removeItemFromCart: () => null,
   totalAmount: () => undefined,
+  Checkouts: () => undefined,
+};
+
+type responseType = {
+  data: {
+    success: boolean;
+    products: carType[];
+  };
 };
 
 type productPrice = {
-  id: number;
+  _id: number;
   model: string;
   category: string;
   color: string;
@@ -61,26 +72,69 @@ type productPrice = {
   image: string;
 };
 
+type checkoutType = { data: { success: boolean; link: string } };
+
 export const ContextProvider = createContext<contextShopType>(
-  contextShopTypeDefault
+  contextShopTypeDefault,
 );
 
 const CarsContextProvider = ({ children }: childrenType) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [cartItems, setCartItems] = useState<CartItems>({});
+  const [newCarsList, setNewCarsList] = useState<carType[]>([]);
+  const [filterCarsList, setFilterCarsList] = useState<carType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [newCarsList, setNewCarsList] = useState<carType[]>(Cars);
+  const getData = async (): Promise<void> => {
+    try {
+      setIsLoading(true);
+      const res: responseType = await axios.get(
+        "http://localhost:2000/products",
+      );
+      console.log(res);
+      const resData: carType[] = res?.data.products;
+      setNewCarsList(resData);
+      setFilterCarsList(resData);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+
+  const Checkouts = async (data: checkoutType): Promise<void> => {
+    try {
+      setIsLoading(true);
+      const res: checkoutType = await axios.post(
+        "http://localhost:2000/checkout",
+        data,
+      );
+      console.log(res);
+      const resData: string = res?.data.link;
+      console.log(resData);
+      setIsLoading(false);
+      if (resData) {
+        window.location.href = resData;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const value: boolean = Object.values(cartItems).some(
-    (val: number) => val > 0
+    (val: number) => val > 0,
   );
 
-  let Products = Cars;
+  let Products = filterCarsList;
   let filteredProduct: carType[];
 
-  filteredProduct = Products.filter(
+  filteredProduct = Products?.filter(
     (pname) =>
-      pname.model.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1
+      pname.model.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1,
   );
 
   useEffect(() => {
@@ -88,22 +142,22 @@ const CarsContextProvider = ({ children }: childrenType) => {
   }, [inputValue]);
 
   const filteredBtn = (val: string) => {
-    filteredProduct = Cars;
+    filteredProduct = filterCarsList;
     if (val === "All") {
-      setNewCarsList(Cars);
+      setNewCarsList(filterCarsList);
     } else {
-      filteredProduct = filteredProduct.filter(
-        (pname) => pname.category === val
+      filteredProduct = filteredProduct?.filter(
+        (pname) => pname.category === val,
       );
       setNewCarsList(filteredProduct);
     }
   };
 
   const filteredRadioInput = (val: string) => {
-    filteredProduct = Cars;
+    filteredProduct = filterCarsList;
 
     if (val === "All") {
-      setNewCarsList(Cars);
+      setNewCarsList(filterCarsList);
       return;
     }
 
@@ -116,7 +170,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
         pname.company.toLowerCase() === val.toLowerCase() ||
         pname.company.toLowerCase() === val.toLowerCase() ||
         pname.color.toLowerCase() === val.toLowerCase() ||
-        pname.price.toString().toLowerCase() === val.toLowerCase()
+        pname.price.toString().toLowerCase() === val.toLowerCase(),
     );
     if (filteredProduct) {
       setNewCarsList(filteredProduct);
@@ -155,8 +209,8 @@ const CarsContextProvider = ({ children }: childrenType) => {
     let productsPrice = 0;
     for (const keys in cartItems) {
       if (cartItems[keys] > 0) {
-        const itemInfo: carType | undefined = newCarsList.find(
-          (product: productPrice) => product.id === +keys
+        const itemInfo: carType | undefined = newCarsList?.find(
+          (product: productPrice) => String(product._id) === keys,
         );
         console.log(itemInfo);
         if (itemInfo) {
@@ -168,7 +222,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
   };
 
   const contextShop: contextShopType = {
-    Cars,
+    filterCarsList,
     newCarsList,
     inputValue,
     setInputValue,
@@ -179,7 +233,9 @@ const CarsContextProvider = ({ children }: childrenType) => {
     removeItemFromCart,
     cartItems,
     value,
+    isLoading,
     totalAmount,
+    Checkouts,
   };
 
   return (

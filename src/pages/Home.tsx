@@ -26,7 +26,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import "../App.css";
+
 import {
   Sheet,
   SheetContent,

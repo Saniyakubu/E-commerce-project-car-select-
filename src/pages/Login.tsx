@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 const formSchema = z.object({
   email: z.string().min(1, {
@@ -34,7 +34,6 @@ export function LoginForm() {
     },
   });
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -43,18 +42,14 @@ export function LoginForm() {
         withCredentials: true,
       });
 
-      toast({
-        description: res.data.Msg,
-      });
+      toast(res.data.Msg);
       localStorage.setItem("user", JSON.stringify({ user: values.email }));
       setTimeout(() => {
         navigate("/");
       }, 1000);
     } catch (err: any) {
       if (err) {
-        toast({
-          description: err?.response.data.Msg,
-        });
+        toast(err?.response.data.Msg);
       }
     }
   }

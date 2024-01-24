@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -65,7 +64,7 @@ const Navbar = () => {
 
   // align-self: flex-end;
   return (
-    <header className="fixed z-50 flex w-screen items-center bg-Dark p-2 md:p-5">
+    <header className="fixed left-0 right-0 top-0 z-50 flex w-screen items-center bg-Dark p-2 md:p-5">
       <nav className="flex w-full flex-col items-center justify-around  md:flex-row md:justify-normal">
         <div className="m-5 flex w-full items-center justify-between md:block md:w-fit">
           <h1 className="justify-self-start text-2xl font-bold text-white">

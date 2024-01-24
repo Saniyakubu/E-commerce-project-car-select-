@@ -2,7 +2,7 @@ import { createContext, useEffect } from "react";
 import { ReactNode } from "react";
 import { useState } from "react";
 import axios, { AxiosResponse } from "axios";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "react-toastify";
 type childrenType = {
   children: ReactNode;
 };
@@ -101,7 +101,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
       console.log(error);
     }
   };
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
   const Checkouts = async (data: checkoutType): Promise<void> => {
     try {
@@ -115,18 +115,20 @@ const CarsContextProvider = ({ children }: childrenType) => {
       );
       if (res.data.Msg === "Unauthorized") {
         setIsLoading(false);
-        toast({
-          title: "Your not logged in",
-          description: (
-            <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-              <code className="mx-auto w-11/12 text-white">Unauthorized</code>
-            </pre>
-          ),
+        toast.error("your not logged in", {
+          position: "top-center",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
         });
 
         setTimeout(() => {
           location.href = "/login";
-        }, 500);
+        }, 800);
         return;
       }
       const resData: string = res?.data.link;

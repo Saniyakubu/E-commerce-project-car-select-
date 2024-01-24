@@ -1,7 +1,7 @@
 import { ContextProvider } from "@/Store";
 import Btn from "@/components/Button/Btn";
 import RadioButton from "@/components/radioBtn/radio";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CgMenuRight } from "react-icons/cg";
 import { FaCartPlus } from "react-icons/fa";
@@ -35,9 +35,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
+import "react-toastify/dist/ReactToastify.css";
 import { carType } from "@/Store";
 import Navbar from "@/components/nav/Navbar";
+import axios from "axios";
+
 const HomePage = () => {
   const {
     filterCarsList,
@@ -51,13 +53,29 @@ const HomePage = () => {
     Checkouts,
     isLoading,
   } = useContext(ContextProvider);
+  const [user, isUser] = useState(
+    JSON.parse(localStorage.getItem("user") as string) || null,
+  );
+
+  useEffect(() => {
+    isUser(localStorage.getItem("user") as string);
+  }, [user]);
+
+  const logout = async () => {
+    const res = await axios.get("http://localhost:2000/logout", {
+      withCredentials: true,
+    });
+    console.log(res);
+    localStorage.clear();
+    isUser(null);
+    location.reload();
+  };
 
   const totalPrice = totalAmount();
 
   return (
     <>
       <Navbar />
-
       <div className="glass fixed top-40 z-20 grid w-full grid-cols-3 p-2 md:right-0  md:top-36 md:w-2/3 md:grid-cols-5 lg:w-3/4 xl:w-10/12">
         <Btn />
       </div>
@@ -158,6 +176,7 @@ const HomePage = () => {
                 <DrawerClose asChild>
                   <Button variant="outline">Close Cart</Button>
                 </DrawerClose>
+                {user && <Button onClick={logout}>Log Out</Button>}
               </DrawerFooter>
             </div>
           </DrawerContent>
@@ -245,6 +264,18 @@ const HomePage = () => {
             </div>
           </SheetTrigger>
           <SheetContent className="hidden overflow-x-hidden overflow-y-scroll p-2 md:block ">
+            {/* <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            /> */}
             <SheetHeader>
               <SheetTitle className=" text-xl font-bold">My Cart</SheetTitle>
               <SheetDescription className=" flex w-full flex-col gap-5 text-center">

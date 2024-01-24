@@ -1,11 +1,16 @@
-import Navbar from "./components/nav/Navbar";
 import HomePage from "./pages/Home";
+import { Route, Routes } from "react-router-dom";
+import RegisterForm from "./pages/Register";
+import LoginForm from "./pages/Login";
 
 function App() {
   return (
     <main>
-      <Navbar />
-      <HomePage />
+      <Routes>
+        <Route path="/" Component={HomePage} />
+        <Route path="/signUp" Component={RegisterForm} />
+        <Route path="/login" Component={LoginForm} />
+      </Routes>
     </main>
   );
 }

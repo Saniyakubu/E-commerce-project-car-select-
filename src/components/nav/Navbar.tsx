@@ -11,10 +11,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ContextProvider } from "@/Store";
-import { useContext } from "react";
-
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 const FormSchema = z.object({
   searchInput: z.string().min(1, {
     message: "Character must be at least 1 characters.",
@@ -28,6 +28,14 @@ const Navbar = () => {
       searchInput: "",
     },
   });
+
+  const [user, isUser] = useState(
+    JSON.parse(localStorage.getItem("user") as string) || null,
+  );
+
+  useEffect(() => {
+    isUser(localStorage.getItem("user") as string);
+  }, [user]);
 
   const { inputValue, setInputValue } = useContext(ContextProvider);
 
@@ -44,6 +52,17 @@ const Navbar = () => {
     //   ),
     // });
   }
+
+  async function logoutUserOUT() {
+    const res = await axios.get("http://localhost:2000/logout", {
+      withCredentials: true,
+    });
+    console.log(res);
+    localStorage.clear();
+    isUser(null);
+    location.reload();
+  }
+
   // align-self: flex-end;
   return (
     <header className="fixed z-50 flex w-screen items-center bg-Dark p-2 md:p-5">
@@ -88,10 +107,13 @@ const Navbar = () => {
             </form>
           </Form>
           <div className="hidden p-5 md:block ">
-            <Avatar className=" cursor-pointer">
-              <AvatarImage src="" alt="Profile" />
-              <AvatarFallback>P</AvatarFallback>
-            </Avatar>
+            {user ? (
+              <Button onClick={logoutUserOUT}>Logout</Button>
+            ) : (
+              <Button>
+                <Link to={"/login"}>SignUp/Login</Link>
+              </Button>
+            )}
           </div>
         </div>
       </nav>

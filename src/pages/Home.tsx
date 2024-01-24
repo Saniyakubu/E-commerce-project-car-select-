@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/sheet";
 
 import { carType } from "@/Store";
+import Navbar from "@/components/nav/Navbar";
 const HomePage = () => {
   const {
     filterCarsList,
@@ -55,6 +56,8 @@ const HomePage = () => {
 
   return (
     <>
+      <Navbar />
+
       <div className="glass fixed top-40 z-20 grid w-full grid-cols-3 p-2 md:right-0  md:top-36 md:w-2/3 md:grid-cols-5 lg:w-3/4 xl:w-10/12">
         <Btn />
       </div>
@@ -75,10 +78,7 @@ const HomePage = () => {
           </section>
         </aside>
         <Drawer>
-          <DrawerTrigger
-            asChild
-            className=" fixed bottom-0 right-0 top-9 z-50 block h-fit text-end  md:hidden"
-          >
+          <DrawerTrigger className="fixed bottom-0 right-0 top-7 z-50 block h-fit text-end  md:hidden">
             <Button className=" bg-Dark hover:text-black ">
               <CgMenuRight className="cursor-pointer text-3xl text-white transition-all hover:text-4xl hover:text-black" />
             </Button>
@@ -137,7 +137,18 @@ const HomePage = () => {
                         ${totalPrice?.toLocaleString()}
                       </h1>
                     </div>
-                    <Button className=" w-full">Check Out</Button>
+                    <Button
+                      onClick={() =>
+                        Checkouts({
+                          cartItems: {
+                            ...cartItems,
+                          },
+                        })
+                      }
+                      className=" w-full"
+                    >
+                      {isLoading ? "Loading..." : " Check Out"}
+                    </Button>
                   </div>
                 ) : (
                   <div className=" mx-20 mt-10 w-full">
@@ -298,7 +309,7 @@ const HomePage = () => {
                     }
                     className=" w-full"
                   >
-                    Check Out
+                    {isLoading ? "Loading..." : " Check Out"}
                   </Button>
                 </div>
               ) : (

@@ -1,8 +1,8 @@
 import { createContext, useEffect } from "react";
 import { ReactNode } from "react";
 import { useState } from "react";
-import axios from "axios";
-// import Cars from "@/Db/Products";
+import axios, { AxiosResponse } from "axios";
+import { useToast } from "@/components/ui/use-toast";
 type childrenType = {
   children: ReactNode;
 };
@@ -101,15 +101,34 @@ const CarsContextProvider = ({ children }: childrenType) => {
       console.log(error);
     }
   };
+  const { toast } = useToast();
 
   const Checkouts = async (data: checkoutType): Promise<void> => {
     try {
       setIsLoading(true);
-      const res: checkoutType = await axios.post(
+      const res: checkoutType | AxiosResponse = await axios.post(
         "http://localhost:2000/checkout",
         data,
+        {
+          withCredentials: true,
+        },
       );
-      console.log(res);
+      if (res.data.Msg === "Unauthorized") {
+        setIsLoading(false);
+        toast({
+          title: "Your not logged in",
+          description: (
+            <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
+              <code className="mx-auto w-11/12 text-white">Unauthorized</code>
+            </pre>
+          ),
+        });
+
+        setTimeout(() => {
+          location.href = "/login";
+        }, 500);
+        return;
+      }
       const resData: string = res?.data.link;
       console.log(resData);
       setIsLoading(false);
@@ -117,6 +136,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
         window.location.href = resData;
       }
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
     }
   };

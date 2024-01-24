@@ -1,13 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import CarsContextProvider from './Store/index.tsx';
-import App from './App.tsx';
-import './index.css';
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
+import React from "react";
+import ReactDOM from "react-dom/client";
+import CarsContextProvider from "./Store/index.tsx";
+import App from "./App.tsx";
+import { BrowserRouter as Router } from "react-router-dom";
+import "./index.css";
+import { Toaster } from "@/components/ui/toaster";
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <CarsContextProvider>
-      <App />
+      <Toaster />
+      <Router>
+        <App />
+      </Router>
     </CarsContextProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

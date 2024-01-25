@@ -13,7 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+
+import { toast } from "react-toastify";
 const formSchema = z.object({
   fullName: z.string().min(1, {
     message: "Full Name must be at least 2 characters.",
@@ -37,7 +38,6 @@ export function RegisterForm() {
     },
   });
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -49,18 +49,14 @@ export function RegisterForm() {
         alert("unsuccessful");
         return;
       }
-      toast({
-        description: res.data.Msg,
-      });
+      toast(res.data.Msg);
       localStorage.setItem("user", JSON.stringify({ user: values.fullName }));
       setTimeout(() => {
         navigate("/");
       }, 1000);
     } catch (err: any) {
       if (err) {
-        toast({
-          description: err?.response.data.Msg,
-        });
+        toast(err?.response.data.Msg);
       }
     }
   }

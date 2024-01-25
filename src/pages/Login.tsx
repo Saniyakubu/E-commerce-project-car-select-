@@ -15,6 +15,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+
 const formSchema = z.object({
   email: z.string().min(1, {
     message: "email is required",
@@ -25,7 +26,6 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

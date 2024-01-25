@@ -29,6 +29,7 @@ interface contextShopType {
   inputValue: string;
   value: boolean;
   isLoading: boolean;
+
   filteredBtn: (val: string) => void;
   filteredRadioInput: (val: string) => void;
   addItemToCart: (itemId: number) => void;
@@ -245,6 +246,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
 
   const contextShop: contextShopType = {
     filterCarsList,
+
     newCarsList,
     inputValue,
     setInputValue,

@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import RegisterForm from "./pages/Register";
 import LoginForm from "./pages/Login";
 import { ToastContainer } from "react-toastify";
+import SuccessPage from "./pages/sucess";
 function App() {
   return (
     <main>
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" Component={HomePage} />
         <Route path="/signUp" Component={RegisterForm} />
         <Route path="/login" Component={LoginForm} />
+        <Route path="/success" Component={SuccessPage} />
       </Routes>
     </main>
   );

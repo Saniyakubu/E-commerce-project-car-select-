@@ -53,7 +53,7 @@ const Navbar = () => {
   }
 
   async function logoutUserOUT() {
-    const res = await axios.get("http://localhost:2000/logout", {
+    const res = await axios.get("https://carlists.onrender.com/logout", {
       withCredentials: true,
     });
     console.log(res);

@@ -42,9 +42,13 @@ export function RegisterForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     try {
-      const res = await axios.post("http://localhost:2000/signup", values, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        "https://carlists.onrender.com/signup",
+        values,
+        {
+          withCredentials: true,
+        },
+      );
       if (res.data.success === false) {
         alert("unsuccessful");
         return;

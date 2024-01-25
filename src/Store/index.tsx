@@ -90,7 +90,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
     try {
       setIsLoading(true);
       const res: responseType = await axios.get(
-        "http://localhost:2000/products",
+        "https://carlists.onrender.com/products",
       );
       console.log(res);
       const resData: carType[] = res?.data.products;
@@ -108,7 +108,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
     try {
       setIsLoading(true);
       const res: checkoutType | AxiosResponse = await axios.post(
-        "http://localhost:2000/checkout",
+        "https://carlists.onrender.com/checkout",
         data,
         {
           withCredentials: true,

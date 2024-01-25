@@ -38,9 +38,13 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     try {
-      const res = await axios.post("http://localhost:2000/login", values, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        "https://carlists.onrender.com/login",
+        values,
+        {
+          withCredentials: true,
+        },
+      );
 
       toast(res.data.Msg);
       localStorage.setItem("user", JSON.stringify({ user: values.email }));

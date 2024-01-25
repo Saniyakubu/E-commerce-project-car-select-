@@ -65,7 +65,7 @@ export function LoginForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="mx-auto my-auto w-4/5 rounded-2xl bg-slate-900 p-10 text-white shadow-2xl md:w-2/5"
+          className="mx-auto my-auto w-11/12 rounded-2xl bg-slate-900 p-10 text-white shadow-2xl md:w-2/5"
         >
           <FormField
             control={form.control}
@@ -104,9 +104,12 @@ export function LoginForm() {
               </FormItem>
             )}
           />
-
-          <div className=" flex justify-between p-3">
-            <Button type="submit" className=" bg-black">
+          <br />
+          <div className="flex items-center justify-between p-3 px-0">
+            <Button
+              type="submit"
+              className="w-36 bg-white text-base font-bold text-black hover:bg-white"
+            >
               Submit
             </Button>
 

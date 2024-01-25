@@ -62,7 +62,7 @@ export function RegisterForm() {
   }
 
   return (
-    <section className="flex h-[100svh] flex-col   bg-slate-900">
+    <section className="flex h-[100svh] flex-col bg-slate-900">
       <h1 className="self-start p-5 ">
         <Link className="font-bold text-white" to={"/"}>
           Home
@@ -128,14 +128,17 @@ export function RegisterForm() {
               </FormItem>
             )}
           />
-
-          <div className=" flex justify-between p-3">
-            <Button type="submit" className=" bg-black">
+          <br />
+          <div className="flex items-center justify-between p-3 px-0">
+            <Button
+              type="submit"
+              className="w-36 bg-white text-base font-bold text-black hover:bg-white"
+            >
               Submit
             </Button>
 
             <Link className=" font-bold text-white" to={"/login"}>
-              SignUp
+              Login
             </Link>
           </div>
         </form>

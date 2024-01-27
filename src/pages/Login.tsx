@@ -15,6 +15,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { ContextProvider } from "@/Store";
 
 const formSchema = z.object({
   email: z.string().min(1, {
@@ -33,7 +35,10 @@ export function LoginForm() {
       email: "",
     },
   });
+
   const navigate = useNavigate();
+
+  const { setToken } = useContext(ContextProvider);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -45,7 +50,9 @@ export function LoginForm() {
           withCredentials: true,
         },
       );
-
+      if (res) {
+        setToken(res?.data?.token);
+      }
       toast(res.data.Msg);
       localStorage.setItem("user", JSON.stringify({ user: values.email }));
       setTimeout(() => {
@@ -53,7 +60,7 @@ export function LoginForm() {
       }, 1000);
     } catch (err: any) {
       if (err) {
-        toast(err?.response.data.Msg);
+        toast(err?.response?.data?.Msg);
       }
     }
   }

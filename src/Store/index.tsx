@@ -133,7 +133,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
         });
 
         setTimeout(() => {
-          navigate("/login");
+          location.href = "/login";
         }, 800);
         return;
       }

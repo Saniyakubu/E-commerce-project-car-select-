@@ -116,7 +116,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
         data,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         },
       );

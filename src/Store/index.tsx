@@ -134,12 +134,12 @@ const CarsContextProvider = ({ children }: childrenType) => {
           theme: "dark",
         });
 
-        setTimeout(() => {
-          location.href = "/login";
-        }, 800);
+        // setTimeout(() => {
+        //   location.href = "/login";
+        // }, 800);
         return;
       }
-      const resData: string = res?.data.link;
+      const resData: string = res?.data?.link;
       console.log(resData);
       setIsLoading(false);
       if (resData) {

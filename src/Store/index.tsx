@@ -115,7 +115,6 @@ const CarsContextProvider = ({ children }: childrenType) => {
         "https://carlists.onrender.com/checkout",
         data,
         {
-          withCredentials: true,
           headers: {
             Authorization: `Bearer ${token}`,
           },

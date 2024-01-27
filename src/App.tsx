@@ -22,10 +22,7 @@ function App() {
       <Routes>
         <Route path="/" Component={HomePage} />
         <Route path="/signup" Component={RegisterForm} />
-        <Route
-          path="https://carlists.netlify.app/login"
-          Component={LoginForm}
-        />
+        <Route path="/login" Component={LoginForm} />
         <Route path="/success" Component={SuccessPage} />
       </Routes>
     </main>

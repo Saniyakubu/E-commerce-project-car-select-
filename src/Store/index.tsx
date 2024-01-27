@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 type childrenType = {
   children: ReactNode;
 };
@@ -89,7 +90,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
   const [filterCarsList, setFilterCarsList] = useState<carType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   const getData = async (): Promise<void> => {
     try {
       setIsLoading(true);
@@ -131,9 +132,9 @@ const CarsContextProvider = ({ children }: childrenType) => {
           theme: "dark",
         });
 
-        // setTimeout(() => {
-        //   location.href = "/login";
-        // }, 800);
+        setTimeout(() => {
+          navigate("/login");
+        }, 800);
         return;
       }
       const resData: string = res?.data?.link;

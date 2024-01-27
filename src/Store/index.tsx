@@ -115,9 +115,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
         "https://carlists.onrender.com/checkout",
         data,
         {
-          headers: {
-            Authorization: `${token}`,
-          },
+          withCredentials: true,
         },
       );
       if (res.data.Msg === "Unauthorized") {

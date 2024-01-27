@@ -8,11 +8,11 @@ import { Toaster } from "@/components/ui/toaster";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <CarsContextProvider>
-      <Toaster />
-      <Router>
+    <Toaster />
+    <Router>
+      <CarsContextProvider>
         <App />
-      </Router>
-    </CarsContextProvider>
+      </CarsContextProvider>
+    </Router>
   </React.StrictMode>,
 );

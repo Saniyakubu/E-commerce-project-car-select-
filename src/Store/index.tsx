@@ -134,7 +134,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
         return;
       }
       const resData: string = res?.data?.link;
-      console.log(resData);
+
       setIsLoading(false);
       if (resData) {
         window.location.href = resData;

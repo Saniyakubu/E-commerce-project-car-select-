@@ -62,7 +62,7 @@ const HomePage = () => {
   }, [user]);
 
   const logout = async () => {
-    const res = await axios.get("https://carlists.onrender.com/logout", {
+    const res = await axios.post("https://carlists.onrender.com/logout", {
       withCredentials: true,
     });
     console.log(res);

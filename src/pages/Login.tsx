@@ -38,7 +38,7 @@ export function LoginForm() {
 
   const navigate = useNavigate();
 
-  const { setToken, setIsLoading, isLoading } = useContext(ContextProvider);
+  const { setIsLoading, isLoading } = useContext(ContextProvider);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -53,7 +53,7 @@ export function LoginForm() {
       if (res) {
         setIsLoading(false);
       }
-      toast(res.data.Msg);
+      toast(res?.data?.Msg);
       localStorage.setItem("user", JSON.stringify({ user: values.email }));
       setTimeout(() => {
         navigate("/");

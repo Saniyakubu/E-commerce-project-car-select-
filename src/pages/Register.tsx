@@ -67,7 +67,7 @@ export function RegisterForm() {
     } catch (err: any) {
       if (err) {
         setIsLoading(false);
-        toast(err?.response.data.Msg);
+        toast(err?.response?.data?.Msg);
       }
     }
   }

@@ -30,9 +30,7 @@ interface contextShopType {
   inputValue: string;
   value: boolean;
   isLoading: boolean;
-  token: string | null;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setToken: React.Dispatch<React.SetStateAction<string | null>>;
   filteredBtn: (val: string) => void;
   filteredRadioInput: (val: string) => void;
   addItemToCart: (itemId: number) => void;
@@ -49,9 +47,7 @@ const contextShopTypeDefault: contextShopType = {
   inputValue: "",
   value: false,
   isLoading: false,
-  token: null,
   setIsLoading: () => Boolean,
-  setToken: () => null,
   setInputValue: () => "",
   filteredBtn: () => null,
   filteredRadioInput: () => null,
@@ -91,7 +87,6 @@ const CarsContextProvider = ({ children }: childrenType) => {
   const [newCarsList, setNewCarsList] = useState<carType[]>([]);
   const [filterCarsList, setFilterCarsList] = useState<carType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
   const navigate = useNavigate();
   const getData = async (): Promise<void> => {
     try {
@@ -100,7 +95,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
         "https://carlists.onrender.com/products",
       );
       console.log(res);
-      const resData: carType[] = res?.data.products;
+      const resData: carType[] = res?.data?.products;
       setNewCarsList(resData);
       setFilterCarsList(resData);
       setIsLoading(false);
@@ -110,7 +105,6 @@ const CarsContextProvider = ({ children }: childrenType) => {
     }
   };
   // const { toast } = useToast();
-  console.log(token);
   const Checkouts = async (data: checkoutType): Promise<void> => {
     try {
       setIsLoading(true);
@@ -191,9 +185,9 @@ const CarsContextProvider = ({ children }: childrenType) => {
       return;
     }
 
-    if (inputValue) {
-      filteredProduct = filteredProduct;
-    }
+    // if (inputValue) {
+    //   filteredProduct = filteredProduct;
+    // }
 
     filteredProduct = filteredProduct.filter(
       (pname) =>
@@ -267,8 +261,6 @@ const CarsContextProvider = ({ children }: childrenType) => {
     setIsLoading,
     totalAmount,
     Checkouts,
-    token,
-    setToken,
   };
 
   return (

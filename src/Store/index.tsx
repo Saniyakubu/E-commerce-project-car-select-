@@ -31,6 +31,7 @@ interface contextShopType {
   value: boolean;
   isLoading: boolean;
   token: string | null;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
   filteredBtn: (val: string) => void;
   filteredRadioInput: (val: string) => void;
@@ -49,6 +50,7 @@ const contextShopTypeDefault: contextShopType = {
   value: false,
   isLoading: false,
   token: null,
+  setIsLoading: () => Boolean,
   setToken: () => null,
   setInputValue: () => "",
   filteredBtn: () => null,
@@ -251,7 +253,6 @@ const CarsContextProvider = ({ children }: childrenType) => {
 
   const contextShop: contextShopType = {
     filterCarsList,
-
     newCarsList,
     inputValue,
     setInputValue,
@@ -263,6 +264,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
     cartItems,
     value,
     isLoading,
+    setIsLoading,
     totalAmount,
     Checkouts,
     token,

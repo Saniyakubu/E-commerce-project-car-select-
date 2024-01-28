@@ -15,6 +15,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
+import { ContextProvider } from "@/Store";
+import { useContext } from "react";
 const formSchema = z.object({
   fullName: z.string().min(1, {
     message: "Full Name must be at least 2 characters.",
@@ -29,6 +31,9 @@ const formSchema = z.object({
 
 export function RegisterForm() {
   // 1. Define your form.
+
+  const { setIsLoading, isLoading } = useContext(ContextProvider);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,7 +45,7 @@ export function RegisterForm() {
   const navigate = useNavigate();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    setIsLoading(true);
     try {
       const res = await axios.post(
         "https://carlists.onrender.com/signup",
@@ -53,6 +58,7 @@ export function RegisterForm() {
         alert("unsuccessful");
         return;
       }
+      setIsLoading(false);
       toast(res.data.Msg);
       localStorage.setItem("user", JSON.stringify({ user: values.fullName }));
       setTimeout(() => {
@@ -60,6 +66,7 @@ export function RegisterForm() {
       }, 1000);
     } catch (err: any) {
       if (err) {
+        setIsLoading(false);
         toast(err?.response.data.Msg);
       }
     }
@@ -136,9 +143,10 @@ export function RegisterForm() {
           <div className="flex items-center justify-between p-3 px-0">
             <Button
               type="submit"
+              disabled={isLoading && isLoading}
               className="w-36 bg-white text-base font-bold text-black hover:bg-white"
             >
-              Submit
+              {isLoading ? "Loading..." : "Submit"}
             </Button>
 
             <Link className=" font-bold text-white" to={"/login"}>

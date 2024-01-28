@@ -38,10 +38,10 @@ export function LoginForm() {
 
   const navigate = useNavigate();
 
-  const { setToken } = useContext(ContextProvider);
+  const { setToken, setIsLoading, isLoading } = useContext(ContextProvider);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    setIsLoading(true);
     try {
       const res = await axios.post(
         "https://carlists.onrender.com/login",
@@ -51,7 +51,7 @@ export function LoginForm() {
         },
       );
       if (res) {
-        setToken(res?.data?.token);
+        setIsLoading(false);
       }
       toast(res.data.Msg);
       localStorage.setItem("user", JSON.stringify({ user: values.email }));
@@ -60,6 +60,7 @@ export function LoginForm() {
       }, 1000);
     } catch (err: any) {
       if (err) {
+        setIsLoading(false);
         toast(err?.response?.data?.Msg);
       }
     }
@@ -119,9 +120,10 @@ export function LoginForm() {
           <div className="flex items-center justify-between p-3 px-0">
             <Button
               type="submit"
+              disabled={isLoading && isLoading}
               className="w-36 bg-white text-base font-bold text-black hover:bg-white"
             >
-              Submit
+              {isLoading ? "Loading..." : "Submit"}
             </Button>
 
             <Link className=" font-bold text-white" to={"/signUp"}>

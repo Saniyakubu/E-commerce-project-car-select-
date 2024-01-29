@@ -53,15 +53,13 @@ const Navbar = () => {
   }
 
   async function logoutUserOUT() {
-    const res = await axios.get("https://carlists.onrender.com/logout", {
+    await axios.get("https://carlists.onrender.com/logout", {
       withCredentials: true,
-
-      headers: {},
     });
-    console.log(res);
+
     localStorage.clear();
     isUser(null);
-    location.reload();
+    // location.reload();
   }
 
   // align-self: flex-end;

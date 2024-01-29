@@ -62,13 +62,11 @@ const HomePage = () => {
   }, [user]);
 
   const logout = async () => {
-    const res = await axios.post("https://carlists.onrender.com/logout", {
-      withCredentials: true,
-    });
-    console.log(res);
+    await axios.get("https://carlists.onrender.com/logout");
+
     localStorage.clear();
     isUser(null);
-    location.reload();
+    // location.reload();
   };
 
   const totalPrice = totalAmount();
@@ -177,6 +175,7 @@ const HomePage = () => {
                   <Button variant="outline">Close Cart</Button>
                 </DrawerClose>
                 {user && <Button onClick={logout}>Log Out</Button>}
+                <Button onClick={logout}>Log Out</Button>
               </DrawerFooter>
             </div>
           </DrawerContent>

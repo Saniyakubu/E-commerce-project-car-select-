@@ -24,7 +24,6 @@ import axios from "axios";
 const MobileMenu = () => {
   const {
     filterCarsList,
-    newCarsList,
     cartItems,
     value,
     totalAmount,

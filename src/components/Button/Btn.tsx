@@ -15,7 +15,7 @@ const Btn = () => {
   ];
 
   return (
-    <>
+    <div className="glass fixed top-40 z-20 grid w-full grid-cols-3 p-2 md:right-0 md:top-36 md:w-2/3 md:grid-cols-5 lg:w-3/4 xl:w-10/12">
       {addNewBtn.map((L: string, index) => {
         return (
           <Button
@@ -29,7 +29,7 @@ const Btn = () => {
           </Button>
         );
       })}
-    </>
+    </div>
   );
 };
 

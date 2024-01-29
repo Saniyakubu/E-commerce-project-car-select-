@@ -1,4 +1,4 @@
-import { createContext, useEffect } from "react";
+import { createContext, useCallback, useEffect } from "react";
 import { ReactNode } from "react";
 import { useState } from "react";
 import axios, { AxiosResponse } from "axios";
@@ -88,13 +88,14 @@ const CarsContextProvider = ({ children }: childrenType) => {
   const [filterCarsList, setFilterCarsList] = useState<carType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
   const getData = async (): Promise<void> => {
     try {
       setIsLoading(true);
       const res: responseType = await axios.get(
         "https://carlists.onrender.com/products",
       );
-      console.log(res);
+
       const resData: carType[] = res?.data?.products;
       setNewCarsList(resData);
       setFilterCarsList(resData);
@@ -165,17 +166,20 @@ const CarsContextProvider = ({ children }: childrenType) => {
     setNewCarsList(filteredProduct);
   }, [inputValue]);
 
-  const filteredBtn = (val: string) => {
-    filteredProduct = filterCarsList;
-    if (val === "All") {
-      setNewCarsList(filterCarsList);
-    } else {
-      filteredProduct = filteredProduct?.filter(
-        (pname) => pname.category === val,
-      );
-      setNewCarsList(filteredProduct);
-    }
-  };
+  const filteredBtn = useCallback(
+    (val: string) => {
+      filteredProduct = filterCarsList;
+      if (val === "All") {
+        setNewCarsList(filterCarsList);
+      } else {
+        filteredProduct = filteredProduct?.filter(
+          (pname) => pname.category === val,
+        );
+        setNewCarsList(filteredProduct);
+      }
+    },
+    [newCarsList],
+  );
 
   const filteredRadioInput = (val: string) => {
     filteredProduct = filterCarsList;

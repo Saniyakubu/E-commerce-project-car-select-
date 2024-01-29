@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ContextProvider } from "@/Store";
-import { useContext, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+
 const FormSchema = z.object({
   searchInput: z.string().min(1, {
     message: "Character must be at least 1 characters.",
@@ -36,21 +37,11 @@ const Navbar = () => {
     isUser(localStorage.getItem("user") as string);
   }, [user]);
 
-  const { inputValue, setInputValue, isLoading, setIsLoading } =
+  const { setInputValue, isLoading, setIsLoading } =
     useContext(ContextProvider);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setInputValue(data.searchInput);
-    console.log(inputValue);
-    console.log(data);
-    // toast({
-    //   title: 'You submitted the following values:',
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
   }
 
   async function logoutUserOUT() {
@@ -67,12 +58,11 @@ const Navbar = () => {
       setIsLoading(false);
       console.log(error);
     }
-    // location.reload();
   }
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 flex w-screen items-center bg-Dark p-2 md:p-5">
-      <nav className="flex w-full flex-col items-center justify-around  md:flex-row md:justify-normal">
+      <nav className="flex w-full flex-col items-center justify-around md:flex-row md:justify-normal">
         <div className="m-5 flex w-full items-center justify-between md:block md:w-fit">
           <h1 className="justify-self-start text-2xl font-bold text-white">
             Car Select
@@ -82,7 +72,7 @@ const Navbar = () => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="relative mx-auto flex w-80  items-center lg:w-96"
+              className="relative mx-auto flex w-80 items-center lg:w-96"
             >
               <FormField
                 control={form.control}
@@ -92,7 +82,7 @@ const Navbar = () => {
                     {/* <FormLabel>Search Input</FormLabel> */}
                     <FormControl>
                       <Input
-                        className="relative mx-auto  w-80 p-6 text-lg lg:w-96"
+                        className="relative mx-auto w-80 p-6 text-lg lg:w-96"
                         placeholder="Search Car"
                         {...field}
                       />
@@ -126,4 +116,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default memo(Navbar);

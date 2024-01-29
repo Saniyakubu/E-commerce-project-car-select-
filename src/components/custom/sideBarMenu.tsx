@@ -17,7 +17,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "../ui/sheet";
-import { useContext } from "react";
+import { memo, useContext } from "react";
 
 const SideBarMenu = () => {
   const {
@@ -116,4 +116,4 @@ const SideBarMenu = () => {
   );
 };
 
-export default SideBarMenu;
+export default memo(SideBarMenu);

@@ -183,10 +183,11 @@ const HomePage = () => {
                 <DrawerClose asChild>
                   <Button variant="outline">Close Cart</Button>
                 </DrawerClose>
-                {user && <Button onClick={logout}>Log Out</Button>}
-                <Button disabled={isLoading && isLoading} onClick={logout}>
-                  {isLoading ? "Loading..." : "Log Out"}
-                </Button>
+                {user && (
+                  <Button disabled={isLoading && isLoading} onClick={logout}>
+                    {isLoading ? "Loading..." : "Log Out"}
+                  </Button>
+                )}
               </DrawerFooter>
             </div>
           </DrawerContent>

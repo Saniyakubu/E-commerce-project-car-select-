@@ -36,7 +36,8 @@ const Navbar = () => {
     isUser(localStorage.getItem("user") as string);
   }, [user]);
 
-  const { inputValue, setInputValue } = useContext(ContextProvider);
+  const { inputValue, setInputValue, isLoading, setIsLoading } =
+    useContext(ContextProvider);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setInputValue(data.searchInput);
@@ -53,16 +54,22 @@ const Navbar = () => {
   }
 
   async function logoutUserOUT() {
-    await axios.get("https://carlists.onrender.com/logout", {
-      withCredentials: true,
-    });
+    setIsLoading(true);
+    try {
+      await axios.get("https://carlists.onrender.com/logout", {
+        withCredentials: true,
+      });
 
-    localStorage.clear();
-    isUser(null);
+      localStorage.clear();
+      setIsLoading(false);
+      isUser(null);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
     // location.reload();
   }
 
-  // align-self: flex-end;
   return (
     <header className="fixed left-0 right-0 top-0 z-50 flex w-screen items-center bg-Dark p-2 md:p-5">
       <nav className="flex w-full flex-col items-center justify-around  md:flex-row md:justify-normal">
@@ -70,9 +77,6 @@ const Navbar = () => {
           <h1 className="justify-self-start text-2xl font-bold text-white">
             Car Select
           </h1>
-          <div className=" md:hidden">
-            {/* <CgMenuRight className=" text-white text-3xl" /> */}
-          </div>
         </div>
         <div className="mx-auto flex w-full items-center justify-between p-3 md:w-2/3">
           <Form {...form}>
@@ -107,7 +111,9 @@ const Navbar = () => {
           </Form>
           <div className="hidden p-5 md:block ">
             {user ? (
-              <Button onClick={logoutUserOUT}>Logout</Button>
+              <Button disabled={isLoading && isLoading} onClick={logoutUserOUT}>
+                {isLoading ? "Loading..." : "Log Out"}
+              </Button>
             ) : (
               <Button>
                 <Link to={"/login"}>SignUp/Login</Link>

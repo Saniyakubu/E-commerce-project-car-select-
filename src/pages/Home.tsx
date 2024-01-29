@@ -52,6 +52,7 @@ const HomePage = () => {
     totalAmount,
     Checkouts,
     isLoading,
+    setIsLoading,
   } = useContext(ContextProvider);
   const [user, isUser] = useState(
     JSON.parse(localStorage.getItem("user") as string) || null,
@@ -62,10 +63,18 @@ const HomePage = () => {
   }, [user]);
 
   const logout = async () => {
-    await axios.get("https://carlists.onrender.com/logout");
-
-    localStorage.clear();
-    isUser(null);
+    setIsLoading(true);
+    try {
+      await axios.get("https://carlists.onrender.com/logout", {
+        withCredentials: true,
+      });
+      localStorage.clear();
+      setIsLoading(false);
+      isUser(null);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
     // location.reload();
   };
 
@@ -175,7 +184,9 @@ const HomePage = () => {
                   <Button variant="outline">Close Cart</Button>
                 </DrawerClose>
                 {user && <Button onClick={logout}>Log Out</Button>}
-                <Button onClick={logout}>Log Out</Button>
+                <Button disabled={isLoading && isLoading} onClick={logout}>
+                  {isLoading ? "Loading..." : "Log Out"}
+                </Button>
               </DrawerFooter>
             </div>
           </DrawerContent>

@@ -11,7 +11,11 @@ import MobileMenu from "@/components/custom/mobileMenu";
 import "react-toastify/dist/ReactToastify.css";
 
 const HomePage = () => {
-  const { newCarsList, isLoading } = useContext(ContextProvider);
+  const { newCarsList, isLoading, isError } = useContext(ContextProvider);
+
+  if (isError) {
+    return <h1>{isError}</h1>;
+  }
 
   return (
     <>

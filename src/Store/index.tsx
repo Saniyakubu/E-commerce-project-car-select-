@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { string } from "zod";
 type childrenType = {
   children: ReactNode;
 };
@@ -26,6 +27,8 @@ interface contextShopType {
   filterCarsList: carType[];
   newCarsList: carType[];
   cartItems: CartItems;
+  isError: string | null;
+  setIsError: React.Dispatch<React.SetStateAction<string | null>>;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   inputValue: string;
   value: boolean;
@@ -47,6 +50,8 @@ const contextShopTypeDefault: contextShopType = {
   inputValue: "",
   value: false,
   isLoading: false,
+  isError: null,
+  setIsError: () => null,
   setIsLoading: () => Boolean,
   setInputValue: () => "",
   filteredBtn: () => null,
@@ -87,6 +92,7 @@ const CarsContextProvider = ({ children }: childrenType) => {
   const [newCarsList, setNewCarsList] = useState<carType[]>([]);
   const [filterCarsList, setFilterCarsList] = useState<carType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const getData = async (): Promise<void> => {
@@ -101,8 +107,9 @@ const CarsContextProvider = ({ children }: childrenType) => {
       setFilterCarsList(resData);
       setIsLoading(false);
     } catch (error) {
+      const err = error as Error;
       setIsLoading(false);
-      console.log(error);
+      setIsError(err.message);
     }
   };
   // const { toast } = useToast();
@@ -250,6 +257,8 @@ const CarsContextProvider = ({ children }: childrenType) => {
   };
 
   const contextShop: contextShopType = {
+    isError,
+    setIsError,
     filterCarsList,
     newCarsList,
     inputValue,

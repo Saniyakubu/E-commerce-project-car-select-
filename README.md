@@ -1,30 +1,110 @@
-# React + TypeScript + Vite
+# CarList
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CarList is a web application that allows users to browse and purchase cars online. It features a secure payment integration using Stripe, ensuring a smooth and safe transaction process.
 
-Currently, two official plugins are available:
+![CarList Logo](/carlist-logo.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- Browse a wide selection of cars
+- Detailed car information and images
+- Secure payments with Stripe
+- User-friendly and responsive interface
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+- **Frontend:** React, TypeScript, TailWindCss
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB
+- **Payment Integration:** Stripe
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Screenshots
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Home Page
+
+![Home Page](/carlist-logo.png)
+
+## Getting Started
+
+To get a local copy of the project up and running, follow these steps:
+
+### Prerequisites
+
+Ensure you have the following installed on your local machine:
+
+- Node.js
+- npm (or yarn)
+
+### Installation
+
+1. Clone the repository:
+
+   ```sh
+   git clone https://github.com/yourusername/carlist.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```sh
+   cd carlist
+   ```
+
+3. Install the necessary dependencies:
+   ```sh
+   npm install
+   ```
+   or if you're using yarn:
+   ```sh
+   yarn install
+   ```
+
+### Running the Application
+
+1. Start the backend server:
+
+   ```sh
+   npm run server
+   ```
+
+   or if you're using yarn:
+
+   ```sh
+   yarn server
+   ```
+
+2. Start the frontend development server:
+
+   ```sh
+   npm start
+   ```
+
+   or if you're using yarn:
+
+   ```sh
+   yarn start
+   ```
+
+3. Open your browser and navigate to `http://localhost:2000` to see the application in action.
+
+## Usage
+
+- Browse through the available cars and select one to view its details.
+- Add the car to your cart and proceed to checkout.
+- Complete the purchase securely using Stripe.
+
+## Contributing
+
+Contributions are welcome! If you have any ideas for new features or improvements, feel free to open an issue or submit a pull request.
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+
+For any inquiries or feedback, feel free to reach out:
+
+- LinkedIn: [my-linkedin-profile](https://www.linkedin.com/in/ysani/)
+- Twitter: [my-twitter-handle](https://twitter.com/only1_speedy)
+
+Thank you for using CarList!

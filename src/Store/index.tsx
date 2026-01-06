@@ -1,9 +1,14 @@
-import { createContext, useCallback, useEffect } from "react";
-import { ReactNode } from "react";
-import { useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useMemo,
+  useState,
+  ReactNode,
+} from "react";
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import useCars from "@/hooks/useCars";
+import { Car } from "@/types/car";
 
 type childrenType = {
   children: ReactNode;
@@ -13,74 +18,70 @@ type CartItems = {
   [key: string]: number;
 };
 
-export type carType = {
-  _id: number;
-  model: string;
+type Filters = {
   category: string;
-  color: string;
-  price: number;
   company: string;
-  image: string;
+  color: string;
 };
 
+type checkoutType = { data: { success: boolean; link: string } };
+
+export type carType = Car;
+
 interface contextShopType {
-  filterCarsList: carType[];
-  newCarsList: carType[];
+  filterCarsList: Car[];
+  newCarsList: Car[];
   cartItems: CartItems;
+  cartCount: number;
   isError: string | null;
   setIsError: React.Dispatch<React.SetStateAction<string | null>>;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   inputValue: string;
+  filters: Filters;
+  updateFilter: (key: keyof Filters, value: string) => void;
+  resetFilters: () => void;
   value: boolean;
   isLoading: boolean;
+  checkoutLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  filteredBtn: (val: string) => void;
-  filteredRadioInput: (val: string) => void;
   addItemToCart: (itemId: number) => void;
   decrementItemFromCart: (itemId: number) => void;
   removeItemFromCart: (itemId: number) => void;
+  clearCart: () => void;
   totalAmount: () => number | undefined;
   Checkouts: (data: any) => Promise<void> | undefined;
+  // Auth modal control
+  authModalOpen: boolean;
+  setAuthModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openAuthModal: () => void;
 }
 
 const contextShopTypeDefault: contextShopType = {
   filterCarsList: [],
   newCarsList: [],
   cartItems: {},
+  cartCount: 0,
   inputValue: "",
+  filters: { category: "All", company: "All", color: "All" },
   value: false,
   isLoading: false,
+  checkoutLoading: false,
   isError: null,
   setIsError: () => null,
-  setIsLoading: () => Boolean,
+  setIsLoading: () => undefined,
   setInputValue: () => "",
-  filteredBtn: () => null,
-  filteredRadioInput: () => null,
+  updateFilter: () => null,
+  resetFilters: () => null,
   addItemToCart: () => null,
   decrementItemFromCart: () => null,
   removeItemFromCart: () => null,
+  clearCart: () => null,
   totalAmount: () => undefined,
   Checkouts: () => undefined,
+  authModalOpen: false,
+  setAuthModalOpen: () => null,
+  openAuthModal: () => null,
 };
-
-type responseType = {
-  data: {
-    success: boolean;
-    products: carType[];
-  };
-};
-
-type productPrice = {
-  _id: number;
-  model: string;
-  category: string;
-  color: string;
-  price: number;
-  company: string;
-  image: string;
-};
-
-type checkoutType = { data: { success: boolean; link: string } };
 
 export const ContextProvider = createContext<contextShopType>(
   contextShopTypeDefault,
@@ -89,149 +90,85 @@ export const ContextProvider = createContext<contextShopType>(
 const CarsContextProvider = ({ children }: childrenType) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [cartItems, setCartItems] = useState<CartItems>({});
-  const [newCarsList, setNewCarsList] = useState<carType[]>([]);
-  const [filterCarsList, setFilterCarsList] = useState<carType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [filters, setFilters] = useState<Filters>({
+    category: "All",
+    company: "All",
+    color: "All",
+  });
+  const [actionLoading, setActionLoading] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [isError, setIsError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
-  const getData = async (): Promise<void> => {
-    try {
-      setIsLoading(true);
-      const res: responseType = await axios.get(
-        "https://carlists.onrender.com/products",
-      );
+  const { data: cars = [], isPending: isCarsLoading, error } = useCars();
 
-      const resData: carType[] = res?.data?.products;
-      setNewCarsList(resData);
-      setFilterCarsList(resData);
-      setIsLoading(false);
-    } catch (error) {
-      const err = error as Error;
-      setIsLoading(false);
-      setIsError(err.message);
-    }
-  };
-  // const { toast } = useToast();
-  const Checkouts = async (data: checkoutType): Promise<void> => {
-    try {
-      setIsLoading(true);
-      const res: checkoutType | AxiosResponse = await axios.post(
-        "https://carlists.onrender.com/checkout",
-        data,
-        {
-          withCredentials: true,
-        },
-      );
-      if (res.data.Msg === "Unauthorized") {
-        setIsLoading(false);
-        toast.error("your not logged in", {
-          position: "top-center",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-
-        setTimeout(() => {
-          navigate("/login");
-        }, 800);
-        return;
-      }
-      const resData: string = res?.data?.link;
-
-      setIsLoading(false);
-      if (resData) {
-        window.location.href = resData;
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getData();
+  const updateFilter = useCallback((key: keyof Filters, value: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   }, []);
+
+  const resetFilters = useCallback(() => {
+    setFilters({ category: "All", company: "All", color: "All" });
+    setInputValue("");
+  }, []);
+
+  const openAuthModal = useCallback(() => {
+    setAuthModalOpen(true);
+  }, []);
+
+  const filterCarsList = useMemo<Car[]>(() => {
+    return cars ?? [];
+  }, [cars]);
+
+  const newCarsList = useMemo<Car[]>(() => {
+    let filtered = [...filterCarsList];
+
+    if (filters.category !== "All") {
+      filtered = filtered.filter(
+        (car) => car.category.toLowerCase() === filters.category.toLowerCase(),
+      );
+    }
+    if (filters.company !== "All") {
+      filtered = filtered.filter(
+        (car) => car.company.toLowerCase() === filters.company.toLowerCase(),
+      );
+    }
+    if (filters.color !== "All") {
+      filtered = filtered.filter(
+        (car) => car.color.toLowerCase() === filters.color.toLowerCase(),
+      );
+    }
+    if (inputValue.trim()) {
+      filtered = filtered.filter((car) =>
+        car.model.toLowerCase().includes(inputValue.toLowerCase()),
+      );
+    }
+    return filtered;
+  }, [filterCarsList, filters, inputValue]);
+
+  const isLoading = actionLoading || isCarsLoading;
 
   const value: boolean = Object.values(cartItems).some(
     (val: number) => val > 0,
   );
 
-  let Products = filterCarsList;
-  let filteredProduct: carType[];
-
-  filteredProduct = Products?.filter(
-    (pname) =>
-      pname.model.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1,
-  );
-
-  useEffect(() => {
-    setNewCarsList(filteredProduct);
-  }, [inputValue]);
-
-  const filteredBtn = useCallback(
-    (val: string) => {
-      filteredProduct = filterCarsList;
-      if (val === "All") {
-        setNewCarsList(filterCarsList);
-      } else {
-        filteredProduct = filteredProduct?.filter(
-          (pname) => pname.category === val,
-        );
-        setNewCarsList(filteredProduct);
-      }
-    },
-    [newCarsList],
-  );
-
-  const filteredRadioInput = (val: string) => {
-    filteredProduct = filterCarsList;
-
-    if (val === "All") {
-      setNewCarsList(filterCarsList);
-      return;
-    }
-
-    // if (inputValue) {
-    //   filteredProduct = filteredProduct;
-    // }
-
-    filteredProduct = filteredProduct.filter(
-      (pname) =>
-        pname.company.toLowerCase() === val.toLowerCase() ||
-        pname.company.toLowerCase() === val.toLowerCase() ||
-        pname.color.toLowerCase() === val.toLowerCase() ||
-        pname.price.toString().toLowerCase() === val.toLowerCase(),
-    );
-    if (filteredProduct) {
-      setNewCarsList(filteredProduct);
-    }
-  };
-
   const addItemToCart = (itemId: number): void => {
-    if (!cartItems[itemId]) {
-      setCartItems((prev: CartItems) => ({ ...prev, [itemId]: 1 }));
-    } else {
-      setCartItems((prev: CartItems) => ({
-        ...prev,
-        [itemId]: prev[itemId] + 1,
-      }));
-    }
+    setCartItems((prev: CartItems) => ({
+      ...prev,
+      [itemId]: prev[itemId] ? prev[itemId] + 1 : 1,
+    }));
   };
 
   const decrementItemFromCart = (itemId: number): void => {
     if (!cartItems[itemId]) {
-      setCartItems((prev: CartItems) => ({ ...prev, [itemId]: 0 }));
-    } else {
-      setCartItems((prev: CartItems) => ({
-        ...prev,
-        [itemId]: prev[itemId] - 1,
-      }));
+      return;
     }
+    setCartItems((prev: CartItems) => ({
+      ...prev,
+      [itemId]: Math.max(prev[itemId] - 1, 0),
+    }));
   };
 
   const removeItemFromCart = (itemId: number): void => {
@@ -240,14 +177,24 @@ const CarsContextProvider = ({ children }: childrenType) => {
     }
   };
 
+  const clearCart = (): void => {
+    setCartItems({});
+  };
+
+  const cartCount = useMemo(() => {
+    return Object.values(cartItems).reduce(
+      (sum, qty) => sum + (qty > 0 ? qty : 0),
+      0,
+    );
+  }, [cartItems]);
+
   const totalAmount = (): number | undefined => {
     let productsPrice = 0;
     for (const keys in cartItems) {
       if (cartItems[keys] > 0) {
-        const itemInfo: carType | undefined = newCarsList?.find(
-          (product: productPrice) => String(product._id) === keys,
+        const itemInfo: Car | undefined = filterCarsList?.find(
+          (product: Car) => String(product._id) === keys,
         );
-        console.log(itemInfo);
         if (itemInfo) {
           productsPrice += cartItems[keys] * itemInfo?.price;
         }
@@ -256,24 +203,69 @@ const CarsContextProvider = ({ children }: childrenType) => {
     return productsPrice;
   };
 
+  const Checkouts = async (data: checkoutType): Promise<void> => {
+    try {
+      setActionLoading(true);
+      setCheckoutLoading(true);
+      const res: checkoutType | AxiosResponse = await axios.post(
+        "https://carlists.onrender.com/checkout",
+        data,
+        {
+          withCredentials: true,
+        },
+      );
+      if ((res as any).data?.Msg === "Unauthorized") {
+        setActionLoading(false);
+        setCheckoutLoading(false);
+        toast.error("Please log in to checkout");
+        // Open auth modal after a short delay so user sees the toast first
+        setTimeout(() => {
+          setAuthModalOpen(true);
+        }, 500);
+        return;
+      }
+      const resData: string = (res as any)?.data?.link;
+
+      // Don't set loading to false here - keep showing loader until redirect
+      if (resData) {
+        // Keep the loader visible while redirecting
+        window.location.href = resData;
+      } else {
+        setActionLoading(false);
+        setCheckoutLoading(false);
+      }
+    } catch (error: any) {
+      setActionLoading(false);
+      setCheckoutLoading(false);
+      toast.error(error?.message ?? "Something went wrong");
+    }
+  };
+
   const contextShop: contextShopType = {
-    isError,
+    isError: isError ?? error?.message ?? null,
     setIsError,
     filterCarsList,
     newCarsList,
     inputValue,
     setInputValue,
-    filteredBtn,
-    filteredRadioInput,
+    filters,
+    updateFilter,
+    resetFilters,
     addItemToCart,
     decrementItemFromCart,
     removeItemFromCart,
+    clearCart,
     cartItems,
+    cartCount,
     value,
     isLoading,
-    setIsLoading,
+    checkoutLoading,
+    setIsLoading: setActionLoading,
     totalAmount,
     Checkouts,
+    authModalOpen,
+    setAuthModalOpen,
+    openAuthModal,
   };
 
   return (

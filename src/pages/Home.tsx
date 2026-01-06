@@ -1,45 +1,68 @@
-import { ContextProvider } from "@/Store";
-import Btn from "@/components/Button/Btn";
+import { ContextProvider, carType } from "@/Store";
 import { useContext } from "react";
-import { carType } from "@/Store";
 import Navbar from "@/components/nav/Navbar";
 import CarCard from "@/components/custom/carCard";
 import { SkeletonLoadingUi } from "@/components/custom/skeletonLoading";
 import SideBarMenu from "@/components/custom/sideBarMenu";
-import CategoriesList from "@/components/custom/categories";
 import MobileMenu from "@/components/custom/mobileMenu";
-import "react-toastify/dist/ReactToastify.css";
+import FilterBar from "@/components/filters/FilterBar";
 
-const HomePage = () => {
+const ShopPage = () => {
   const { newCarsList, isLoading, isError } = useContext(ContextProvider);
 
   if (isError) {
-    return <h1>{isError}</h1>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <p className="text-lg font-medium text-destructive">{isError}</p>
+          <p className="mt-2 text-sm text-muted-foreground">Please try again later</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <>
       <Navbar />
-      <Btn />
-      <section className="relative flex h-full justify-between">
-        <CategoriesList />
-        <MobileMenu />
-        <div className="mt-96 h-full w-full md:ml-64 md:mt-72 md:w-3/4 xl:w-full">
+      <main className="min-h-screen bg-background pt-16">
+        <div className="mx-auto max-w-6xl px-6 py-8">
+          {/* Header */}
+          <div className="mb-8">
+            <span className="mb-2 block text-sm font-medium text-primary">Inventory</span>
+            <h1 className="mb-2 text-3xl font-bold text-foreground">
+              Browse all vehicles
+            </h1>
+            <p className="text-muted-foreground">
+              {newCarsList.length} {newCarsList.length === 1 ? "car" : "cars"} available
+            </p>
+          </div>
+
+          {/* Filters */}
+          <FilterBar />
+
+          {/* Grid */}
           {isLoading ? (
             <SkeletonLoadingUi />
+          ) : newCarsList.length > 0 ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {newCarsList.map((item: carType) => (
+                <CarCard key={item._id} item={item} />
+              ))}
+            </div>
           ) : (
-            <div className="grid h-full w-full grid-cols-1 gap-5 p-5 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-              {newCarsList &&
-                newCarsList.map((item: carType) => (
-                  <CarCard key={item._id} item={item} />
-                ))}
+            <div className="rounded-2xl border border-border bg-card py-16 text-center">
+              <p className="text-lg font-medium text-foreground">No cars found</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Try adjusting your filters
+              </p>
             </div>
           )}
         </div>
-        <SideBarMenu />
-      </section>
+      </main>
+      <SideBarMenu />
+      <MobileMenu />
     </>
   );
 };
 
-export default HomePage;
+export default ShopPage;
